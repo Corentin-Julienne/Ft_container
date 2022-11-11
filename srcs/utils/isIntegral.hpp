@@ -13,7 +13,7 @@
 #ifndef IS_INTEGRAL_HPP
 # define IS_INTEGRAL_HPP
 
-#include <stdint.h>
+#include <stdint.h> // this header sotres somes types such as char16_t and char32_t
 
 /* "Integral" refers to integer types (i.e. whole numbers). 
 In C++ this means types like int, long, short, etc. */

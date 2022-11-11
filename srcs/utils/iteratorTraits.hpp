@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 13:54:14 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/05 14:18:26 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/11 13:26:01 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace ft
 		typedef T											value_type;
 		typedef T*											pointer;
 		typedef T&											reference;
-		typedef random_access_iterator_tag					iterator_category;	
+		typedef std::random_access_iterator_tag				iterator_category;	
 	};
 
 	/* specialization for const pointers */
@@ -47,7 +47,7 @@ namespace ft
 		typedef T											value_type;
 		typedef const T*									pointer;
 		typedef const T&									reference;
-		typedef random_access_iterator_tag					iterator_category;	
+		typedef std::random_access_iterator_tag				iterator_category;	
 	};
 }
 
