@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/03 19:36:37 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/12 11:05:26 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@
 # include <cstddef>
 # include <sstream>
 
+/* include other files */
+
+# include "VectorIterator.hpp"
+# include "VectorConstIterator.hpp"
+# include "../utils/reverseIterator.hpp"
+
 /* put synopsis there */
 
 namespace ft // called by ft::Vector
@@ -30,24 +36,19 @@ namespace ft // called by ft::Vector
 		/* ALIASES */
 		public:
 			
-			typedef T										value_type;
-			typedef Alloc									allocator_type;
-			typedef typename Alloc::reference 				reference;
-			typedef typename Alloc::const_reference 		const_reference;
-			typedef typename Alloc::pointer 				pointer;
-			typedef typename Alloc::const_pointer 			const_pointer;
-			typedef typename std::size_t 					size_type;
-			typedef typename std::ptrdiff_t 				difference_type;
+			typedef T													value_type;
+			typedef Alloc												allocator_type;
+			typedef typename Alloc::reference 							reference;
+			typedef typename Alloc::const_reference 					const_reference;
+			typedef typename Alloc::pointer 							pointer;
+			typedef typename Alloc::const_pointer 						const_pointer;
+			typedef typename std::size_t 								size_type;
+			typedef typename std::ptrdiff_t 							difference_type;
 			/* aliases for iterators */
-			// typedef implementation defined 				iterator; // See 23.1
-			// typedef implementation defined 				const_iterator; // See 23.1	
-			//typedef std::reverse_iterator<iterator> 		reverse_iterator;
-			//typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
-
-			// typedef typename ft::vectorIterator<T>						iterator;
-			// typedef typename ft::vectorConstIterator<T>					const_iterator;
-			// typedef typename ft::vectorReverseIterator<iterator>		reverse_iterator;
-			// typedef typename ft::vectorConstReverseIterator<iterator>	const_reverse_iterator;
+			typedef typename ft::vectorIterator<T>						iterator;
+			typedef typename ft::vectorConstIterator<T>					const_iterator;
+			typedef typename ft::reverseIterator<iterator>				reverse_iterator;
+			typedef typename ft::reverseIterator<const_iterator>		const_reverse_iterator;
 
 		/* CONSTRUCTORS, DESTRUCTOR, COPY, OVERLOADING ASSIGNMENT OPERATOR (COPLIEN FORM) */
 
