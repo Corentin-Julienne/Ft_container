@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/12 11:05:26 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/14 11:23:55 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,14 @@ namespace ft // called by ft::Vector
 		/* CONSTRUCTORS, DESTRUCTOR, COPY, OVERLOADING ASSIGNMENT OPERATOR (COPLIEN FORM) */
 
 			/* basic constructor (empty vector) */
-			explicit vector(const allocator_type& alloc = allocator_type())
-			{
-				// TODO : implement, including initializing values
-			}
+			explicit vector(const allocator_type& alloc = allocator_type()) : _ptr(nullptr),
+			_size(0), _capacity(0), _alloc(alloc) {}
 
-			/*vector filled with scalar or objects */
-			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+			/* vector filled with scalar or objects */
+			explicit vector(size_type n, const value_type& val = value_type(),
+				const allocator_type& alloc = allocator_type()) : _ptr(nullptr), _size(0), _capacity(0), _alloc(alloc)
 			{
-				// TODO : implement, including initializing values
+				// use resize or push back
 			}
 
 			/* fill with a range of iterators */
@@ -72,7 +71,7 @@ namespace ft // called by ft::Vector
 			}
 
 			/* copy constructor */
-			vector(const vector& x)
+			vector(const vector& x) : _ptr(x._ptr), _size(x._size), _capacity(x._capacity), _alloc(x._alloc) 
 			{
 				// TODO : implement, including initializing values
 			}
@@ -87,7 +86,11 @@ namespace ft // called by ft::Vector
 			/* overloading operator = */
 			vector& operator=(const vector& x)
 			{
-				// TODO : implement
+				if (this != &x)
+				{
+					// TODO
+				}
+				return *this;
 			}
 		
 		/* METHODS RELATIVE TO VECTOR CAPACITY */
@@ -126,50 +129,49 @@ namespace ft // called by ft::Vector
 			
 		/* METHODS RELATIVE TO VECTOR'S ELEMENT ACCESS */
 
-			reference	operator[](size_type n)
-			{
-				// TODO
-			}
-			
-			const_reference	operator[](size_type n) const
-			{
-				// TODO
-			}
+			/* returns a reference to the element at position n in the vector container.
+			can segfault if out-of-range-index */
+			reference	operator[](size_type n) { return *(this + n); };
 
+			/* returns a const reference to the element at position n in the vector container. 
+			can segfault if out-of-range-index */
+			const_reference	operator[](size_type n) const { return *(this + n); };
+
+			/* returns a reference to the element at position n in the vector container.
+			if index is wrong, throw a out-of-range-index exception */
 			reference	at(size_type n)
 			{
-				// TODO
+				if (n >= this->_size)
+					; // throw out of range exception
+				return (this->operator[](n));
 			}
 			
+			/* returns a const reference to the element at position n in the vector container.
+			if index is wrong, throw a out-of-range-index exception */
 			const_reference	at(size_type n) const
 			{
-				// TODO
+				if (n >= this->_size)
+					; // throw out of range exception
+				return (this->operator[](n));
 			}
 			
-			reference	front()
-			{
-				// TODO
-			}
+			/* returns a reference to the first value stored in vector */
+			reference	front(void) { return (*this->_ptr); };
 			
-			const_reference	front() const
-			{
-				// TODO
-			}
+			/* returns a const reference to the first value stored in vector */
+			const_reference	front(void) const { return (*this->_ptr); };
 
-			reference	back()
-			{
-				// TODO
-			}
-			
-			const_reference	back() const
-			{
-				// TODO
-			}
+			/* returns a reference to the last value stored in vector */
+			reference	back(void) { return (*this->_ptr + this->_size); }; 
+						
+			/* returns a reference to the last value stored in vector */
+			const_reference	back(void) const { return (*this->_ptr + this->_size); };
 
-			T*	data()
-			{
-				// TODO
-			}
+			/* returns a pointer to the memory array used internally by the vector */
+			value_type*	data(void) { return this->_ptr ; };
+
+			/* returns a const pointer to the memory array used internally by the vector */
+			const value_type* data(void) const { return this->_ptr ; };
 			
 		/* METHODS RELATIVE TO VECTOR MODIFICATION */
 
@@ -232,10 +234,14 @@ namespace ft // called by ft::Vector
 
 		/* METHOD TO RETURN AN ALLOCATOR */
 		
-			allocator_type	get_allocator() const
-			{
-				// TODO
-			}
+			allocator_type	get_allocator() const { return (this->_alloc); } ;
+
+		private: // private member data
+
+			allocator_type		_alloc;
+			size_type			_size;
+			size_type			_capacity;
+			value_type			*_ptr;
 	};
 	
 	/* OUT OF THE CLASS OVERLOADS FOR OPERATORS */
