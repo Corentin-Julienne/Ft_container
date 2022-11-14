@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/14 11:23:55 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/14 16:32:17 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ namespace ft // called by ft::Vector
 			explicit vector(size_type n, const value_type& val = value_type(),
 				const allocator_type& alloc = allocator_type()) : _ptr(nullptr), _size(0), _capacity(0), _alloc(alloc)
 			{
-				// use resize or push back
+				this->assign(n, val);
 			}
 
 			/* fill with a range of iterators */
@@ -176,19 +176,21 @@ namespace ft // called by ft::Vector
 		/* METHODS RELATIVE TO VECTOR MODIFICATION */
 
 			template <class InputIterator>
-			void	assign(InputIterator first, InputIterator last)
+			void	assign(InputIterator first, InputIterator last) // to test
 			{
-				// TODO
+				for (first; first != last; first++)
+					this->push_back(*first);
 			}
 
-			void	assign(size_type n, const value_type& val)
+			void	assign(size_type n, const value_type& val) // to test
 			{
-				// TODO
+				for (int i = 0; i < n; i++)
+					this->push_back(val);
 			}
 
-			void	push_back(const value_type& val)
+			void	push_back(const value_type& val) // to test
 			{
-				// TODO
+				this->insert(this->begin(), 1, val);
 			}
 
 			void	pop_back(void)

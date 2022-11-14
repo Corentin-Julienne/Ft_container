@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/14 12:24:59 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/14 13:33:40 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/14 13:53:24 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 Colors::Colors(void) : _red("\e[0;31m"), _green("\e[0;32m"), _yellow("\e[0;33m"),
 _blue("\e[0;34m"), _bdRed("\e[1;31m"), _bdGreen("\e[1;32m"), _bdYellow("\e[1;33m"), 
-_bdBlue("\e[1;34m"), _undRed("\e[4;31m"), _undGreen("\e[4;32m"), _undYellow("\e[4;33m"),
-_undBlue("\e[4;34m"), _end("\033[39m"), _reset("\033[0m") {}
+_bdBlue("\e[1;34m"), _undRed("\e[1m\e[4;31m"), _undGreen("\e[1m\e[4;32m"), _undYellow("\e[1m\e[4;33m"),
+_undBlue("\e[1m\e[4;34m"), _end("\033[39m"), _reset("\033[0m") {}
 
 Colors::Colors(const Colors& original) : _red(original._red), _green(original._green), _yellow(original._yellow),
 _blue(original._blue), _bdRed(original._bdRed), _bdGreen(original._bdGreen), _bdYellow(original._bdYellow),
