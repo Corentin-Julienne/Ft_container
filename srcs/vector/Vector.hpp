@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/15 17:28:20 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/16 12:33:21 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include "VectorIterator.hpp"
 # include "VectorConstIterator.hpp"
 # include "../utils/reverseIterator.hpp"
+# include "../utils/compare.hpp"
 
 /* put synopsis there */
 
@@ -211,7 +212,11 @@ namespace ft // called by ft::Vector
 				this->_alloc.construct(this->_ptr + this->_size + 1, val);
 			}
 
-			void	pop_back(void) { this->_alloc.destroy(this->_ptr + this->_size); }; // to test
+			void	pop_back(void)  // to test
+			{ 
+				this->_alloc.destroy(this->_ptr + this->_size); 
+				this->_size--;
+			}
 
 			iterator	insert(iterator position, const value_type& val)
 			{
@@ -245,8 +250,6 @@ namespace ft // called by ft::Vector
 			void	swap(vector& x)
 			{
 				ft::vector<value_type>		tmp = *this;
-				
-				// TODO
 		
 			}
 
@@ -349,50 +352,46 @@ namespace ft // called by ft::Vector
 	/* OUT OF THE CLASS OVERLOADS FOR OPERATORS */
 
 	template <class T, class Alloc>
-	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		// TODO
+		if (lhs.size() != rhs.size())
+			return (false);
+		else
+			return (equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class T, class Alloc>
-	bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		// TODO
+		return (!lhs == rhs);
 	}
+	
 	template <class T, class Alloc>
-	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		// TODO
+		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
 
 	template <class T, class Alloc>
-	bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		// TODO
+		return (!(rhs < lhs));
 	}
 
 	template <class T, class Alloc>
-	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		// TODO
+		return (rhs < lhs);
 	}
 
 	template <class T, class Alloc>
-	bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		// TODO
+		return (!(lhs < rhs));
 	}
 
 	template <class T, class Alloc>
-	void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
-	{
-		// TODO
-		
-		/* This is an overload of the generic algorithm swap that improves its performance by mutually transferring 
-		ownership over their assets to the other container (i.e., the containers exchange references to their data, 
-		without actually performing any element copy or movement): 
-		It behaves as if x.swap(y) was called. */
-	}
+	void swap(vector<T,Alloc>& x, vector<T,Alloc>& y) { x.swap(y); }; // to test
 }
 
 #endif

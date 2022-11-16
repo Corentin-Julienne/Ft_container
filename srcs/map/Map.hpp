@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:40:57 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/03 22:40:12 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:12:42 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <vector>
 # include <cstddef>
 # include <sstream>
+# include <functional>
+
+# include "../utils/pair.hpp"
 
 namespace ft
 {
@@ -26,7 +29,7 @@ namespace ft
 		class Key, 
 		class T,
 		class Compare = std::less<Key>,
-		class Alloc = std::allocator<std::pair<const Key,T> > // change std to ft
+		class Alloc = std::allocator<ft::pair<const Key,T> >
 	> class map
 	{
 		/* ALIASES */
@@ -34,7 +37,7 @@ namespace ft
 
 			typedef Key										key_type;
 			typedef T										mapped_type;
-			typedef std::pair<const Key, T> 				value_type; // put ft::pair there
+			typedef ft::pair<const Key, T> 					value_type;
 			typedef Compare									key_compare;
 			// put value compare there
 			typedef Alloc									allocator_type;
