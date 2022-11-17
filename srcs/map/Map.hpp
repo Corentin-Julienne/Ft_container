@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:40:57 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/16 16:12:42 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/17 13:45:35 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@ namespace ft
 		class T,
 		class Compare = std::less<Key>,
 		class Alloc = std::allocator<ft::pair<const Key,T> >
-	> class map
+	> 
+	class map
 	{
 		/* ALIASES */
 		public:
 
 			typedef Key										key_type;
 			typedef T										mapped_type;
-			typedef ft::pair<const Key, T> 					value_type;
+			typedef pair<const Key, T> 						value_type;
 			typedef Compare									key_compare;
 			// put value compare there
 			typedef Alloc									allocator_type;
@@ -51,6 +52,30 @@ namespace ft
 			// reverse iterators
 			typedef std::reverse_iterator<iterator> 		reverse_iterator;
 			typedef std::reverse_iterator<const_iterator> 	const_reverse_iterator;
+
+		/* CLASS TO COMPARE KEYS */
+
+			class value_compare // compare two keys using std::less 
+			{
+				friend class map;
+				
+				protected:
+				
+					Compare	comp;
+					
+					value_compare(Compare c) : comp(c) {} // protected constructor, usable by map only
+
+				public:
+				
+					typedef bool				result_type;
+					typedef value_type			first_argument_type;
+					typedef value_type			second_argument_type;
+
+					bool operator() (const value_type& x, const value_type& y) const
+					{
+						return comp(x._first_type, y._first_type);
+					}
+			};
 
 		/* CONSTRUCTORS, DESTRUCTOR, COPY, OVERLOADING ASSIGNMENT OPERATOR (COPLIEN FORM) */
 
