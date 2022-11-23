@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/22 15:36:55 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/23 16:31:36 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,31 @@
 #include <memory>
 #include <algorithm>
 
-#include "binarySearchTree.hpp"
+#include "redBlackTree.hpp"
+
+void	leaks_tracking(void)
+{
+	system("leaks Lab");
+}
 
 int main(void)
 {
-	lab::binarySearchTree<std::string, int>	 tree;
+	atexit(leaks_tracking);
+	
+	lab::redBlackTree<int, std::string>	 tree;
 
 	// std::pairs
-	std::pair<std::string, int>	data1 = std::make_pair<std::string, int>("truc", 4);
-	std::pair<std::string, int>	data2 = std::make_pair<std::string, int>("bob", 8);
-	std::pair<std::string, int>	data3 = std::make_pair<std::string, int>("jason", 123);  
+	std::pair<int, std::string>	data1 = std::make_pair<int, std::string>(123, "truc");
+	std::pair<int, std::string>	data2 = std::make_pair<int, std::string>(8, "rob");
+	std::pair<int, std::string>	data3 = std::make_pair<int, std::string>(12, "jason");  
 
 	/* testing procedure */
 	tree.add_and_insert(data1);
 	tree.add_and_insert(data2);
 	tree.add_and_insert(data3);
-
-	
 	
 	/* printing results */
-	tree.printTreeDebug();
+	tree.printTree();
 	
 	return (0);
 }
