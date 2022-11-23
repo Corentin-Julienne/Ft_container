@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/18 15:53:28 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/22 15:36:55 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <algorithm>
 
 #include "binarySearchTree.hpp"
-#include "Node.hpp"
-
 
 int main(void)
 {
@@ -32,9 +30,11 @@ int main(void)
 	tree.add_and_insert(data1);
 	tree.add_and_insert(data2);
 	tree.add_and_insert(data3);
+
+	
 	
 	/* printing results */
-	tree.printTree();
+	tree.printTreeDebug();
 	
 	return (0);
 }

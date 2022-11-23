@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/16 12:33:21 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/22 16:20:46 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,7 @@ namespace ft // called by ft::Vector
 			/* resize the vector capacity. Copy the values in the new array if there is enough space.
 			Then, delete the values in the old arr, update_capacity and _size and make the pointer point
 			to the new arr after freeing the old one */
-			void	_change_mem_allocated(size_type n)
+			void	_change_mem_allocated(size_type n) // check wether the old array has been destroyed
 			{
 				value_type		*new_arr;
 				
