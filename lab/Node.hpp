@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:54 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/23 13:43:24 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/24 15:25:00 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ namespace lab
 			
 			/* CONSTRUCTORS AND DESTRUCTORS, OVERLOADING OPERATOR = */
 
-			Node(value_type pair) : _color(RED), _parent(nullptr), _left(nullptr), _right(nullptr), _val(pair) {};
+			Node(value_type pair) : _color(BLACK), _parent(nullptr), _left(nullptr), _right(nullptr), _val(pair) {};
 			
 			~Node() {}
 

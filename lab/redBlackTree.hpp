@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:56 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/24 13:56:02 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/24 17:32:03 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,7 +241,152 @@ namespace lab
 					target->_left->_parent = newNode;
 				return (newNode);
 			}
+
+			/* returns a copy of a dinamically allocated node (not shallow copy) */
+			node	*_copyNode(node *target)
+			{
+				node	*cpy = this->_createNewNode(target->_val);
+				
+				cpy->_color = target->_color;
+				cpy->_parent = target->_parent;
+				cpy->_left = target->_left;
+				cpy->_right = target->_right;
+				return (cpy);
+			}
+			
 			/* RBT FUNCTIONS */
+
+			/* Basic rule of red-black tree :
+
+			1) Every node in T is either red or black.
+			2) The root node of T is black.
+			3) Every NULL node is black. (NULL nodes are the leaf nodes. They do not contain any keys.
+			When we search for a key that is not present in the tree, we reach the NULL node.)
+			4) If a node is red, both of its children are black. This means no two nodes on a path can be red nodes.
+			5) Every path from a root node to a NULL node has the same number of black nodes.*/
+
+			void	_leftRotate(node *x) // to test
+			{
+				node	*y = x->_right;
+				
+				x->_right = y->_left;
+				if (x->_right != nullptr)
+					x->_right->_parent = x;
+				y->_parent = x->_parent;
+				if (y->_parent != nullptr)
+				{
+					if (y->_parent->_left->_val.first == y->_val.first) // case y is the left node
+						y->_parent->_left = y;
+					else // case y is the right node
+						y->_parent->_right = y;
+				}
+				y->_left = x;
+				x->_parent = y;
+			}
+
+			void	_rightRotate(node *y) // to test
+			{
+				node	*x = y->_left;
+
+				y->_left = x->_right;
+				if (x->_right != nullptr)
+					x->_right->_parent = y;
+				x->_parent = y->_parent;
+				if (x->_parent != nullptr)
+				{
+					if (x->_parent->_left->_val.first == x->_val.first) // case x is the left node
+						x->parent->_left = x;
+					else // case x is the right node
+						x->_parent->_right = x;
+				}
+				x->_right = y;
+				y->_parent = x;
+			}
+
+			void	_redBlackTreeInsert(node *newNode) // to test a lot
+			{
+				this->_treeInsert(newNode); // standard BST insertion
+				if (newNode->_parent == nullptr) // case of root insertion
+					return ;
+				newNode->_color = RED; // coloring the node in red, by default
+				while (newNode->_parent->_color == RED) // if parent is black, do nothing, does not violates RBT rules
+				{
+					/* newNode->_parent->_parent is always accesible because when root is newNode->_parent,
+					then it is always black and the while condition is never met */
+					if (newNode->_parent->_val.first == newNode->_parent->_parent->_right->_val.first)
+					{
+						node	*uncle = newNode->_parent->_parent->_left;  // case uncle is situated at the left of node
+
+						if (uncle->_color == RED)
+						{
+							uncle->_color = BLACK; // changing color of the uncle to black
+							newNode->_parent->_color = BLACK; // changing color of the parent to black
+							newNode->_parent->_parent->_color = RED; // changing color of GP to red
+							newNode = newNode->_parent->_parent;
+						}
+						else if (newNode == newNode->_parent->_left) // case new node is situated at the left
+						{
+							newNode = newNode->_parent;
+							this->_leftRotate(newNode); // to implement
+							newNode->_parent->_color = BLACK;
+							newNode->_parent->_parent->_color = RED;
+							this->_rightRotate(newNode); // to implement
+						}
+					}
+					else // case uncle is situated at the right of the node
+					{
+						node	*uncle = newNode->_parent->_parent->_right;
+
+						if (uncle->_color == RED)
+						{
+							uncle->_color = BLACK;
+							newNode->_parent->_color = BLACK;
+							newNode->_parent->_parent->_color = RED;
+							newNode = newNode->_parent->_parent;
+						}
+						else if (newNode == newNode->_parent->_right)
+						{
+							newNode = newNode->_parent;
+							this->_rightRotate(newNode); // to implement
+							newNode->_parent->_color = BLACK;
+							newNode->_parent->_parent->_color = RED;
+							this->_leftRotate(newNode); // to implement
+						}
+					}
+				}
+				this->_root->_color = BLACK; // rule 2 : root node is ALLWAYS black
+			}
+
+			void	_redBlackTreeDelete(node *start, node *target)
+			{
+				this->_treeDelete(start, target->_val.first); // standard BST deletion
+				while (target != this->_root && target->_color == BLACK) // if node is RED, nothing to do
+				{
+					if (target == target->_parent->_left)
+					{
+						node	*sibling = target->_parent->_right;
+
+						if (sibling->_color == RED)
+						{
+							
+						}
+						if (sibling->_left->_color == BLACK && sibling->_right->_color == BLACK)
+						{
+
+						}
+						else if (sibling->_right->_color == BLACK)
+						{
+							
+						}
+					}
+					else
+					{
+						
+					}
+				}
+				target->_color = BLACK;
+			}
+			
 	};
 }
 
