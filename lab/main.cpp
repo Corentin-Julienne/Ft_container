@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/23 16:31:36 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/24 12:48:01 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,18 @@ int main(void)
 	lab::redBlackTree<int, std::string>	 tree;
 
 	// std::pairs
-	std::pair<int, std::string>	data1 = std::make_pair<int, std::string>(123, "truc");
-	std::pair<int, std::string>	data2 = std::make_pair<int, std::string>(8, "rob");
-	std::pair<int, std::string>	data3 = std::make_pair<int, std::string>(12, "jason");  
+	std::pair<int, std::string>	data1 = std::make_pair<int, std::string>(10, "truc");
+	std::pair<int, std::string>	data2 = std::make_pair<int, std::string>(5, "rob");
+	std::pair<int, std::string>	data3 = std::make_pair<int, std::string>(15, "jason");  
 
 	/* testing procedure */
-	tree.add_and_insert(data1);
-	tree.add_and_insert(data2);
-	tree.add_and_insert(data3);
-	
+	tree.addAndInsert(data1);
+	tree.addAndInsert(data2);
+	tree.addAndInsert(data3);
+
+	tree.deleteNode(5);
 	/* printing results */
 	tree.printTree();
-	
+
 	return (0);
 }

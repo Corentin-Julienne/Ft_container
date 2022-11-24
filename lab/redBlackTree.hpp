@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:56 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/23 16:42:36 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/24 13:56:02 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,16 @@ namespace lab
 
 			/* UTILS */
 
-			void	add_and_insert(const value_type &val) // to test
+			void	addAndInsert(const value_type &val) // to test
 			{
 				node		*newNode = this->_createNewNode(val);
 				
 				this->_treeInsert(newNode);
+			}
+
+			void	deleteNode(const Key &key)
+			{
+				this->_treeDelete(this->_root, key);
 			}
 
 			/* to cover the full tree, elem must be equal to this->_root */
@@ -87,16 +92,13 @@ namespace lab
 				}
 			}
 
+			/* print the tree in 2D : the root value appears in the center of the vertical axis,
+			in the left side of the terminal. Debug and visual function */
 			void	printTree(void)
 			{
 				if (this->_root == nullptr)
 					return ;
-				this->_printTree(this->_root, "", true);
-			}
-
-			void	printTreeDebug(void)
-			{
-				
+				this->_printTree(this->_root, 0);
 			}
 			
 		private:
@@ -110,11 +112,11 @@ namespace lab
 		private:
 
 			/* HELPERS */
-
 			void	_deleteNode(node *target) // to test
 			{
 				this->_pair_alloc.destroy(&target->_val);
 				this->_node_alloc.deallocate(target, 1);
+				target = nullptr;
 			}
 
 			node	*_createNewNode(const value_type &val) // check if useful
@@ -126,46 +128,29 @@ namespace lab
 				newNode->_parent = nullptr;
 				newNode->_right = nullptr;
 				newNode->_left = nullptr;
-				// debug
-				// std::cout << "color = " << newNode->_color << std::endl;
-				// std::cout << "parent = " << newNode->_parent << std::endl;
-				// std::cout << "left =  " << newNode->_left << std::endl;
-				// std::cout << "right = " << newNode->_right << std::endl;
-				// debug end
 				return (newNode);
 			}
 
-			/*  indent should be equal to "" and last to true (and node to this->_root) */
-			void	_printTree(node *target, std::string indent, bool last)
+			/*  space should be equal to 0, target to this->_root */
+			void	_printTree(node *target, int space) // functionnal
 			{
-				if (target != nullptr)
-				{
-					if ()
-					
-					
-					if (last == true)
-					{
-						std::cout << indent;
-						std::cout << "└────";
-						indent += "    ";
-					}
-					else
-					{
-						std::cout << indent;
-						std::cout << "├────";
-						indent += "|    ";
-					}
-					std::cout << root->_val.first << " = " << root->_val.second << std::endl;
-				}
-				else
+				const int	indent = 5;
+				
+				if (target ==  nullptr)
 					return ;
-				this->_printTree(root->_left, indent, false);
-				this->_printTree(root->_right, indent, true);
+				space += indent;
+				this->_printTree(target->_right, space);
+				// prints data
+				std::cout << std::endl;
+				for (int i = indent; i < space; i++)
+        			std::cout << " ";
+				std::cout << "[" << target->_val.first << "]" << std::endl;
+				
+				this->_printTree(target->_left, space);
 			}
- 
 			
 			/* STANDARD BST FUNCTIONS */
-			void	_treeInsert(node *z) // to test // debug that shit !!!
+			void	_treeInsert(node *z) // functionnal
 			{
 				node		*y = nullptr;
 				node		*x = this->_root;
@@ -190,44 +175,72 @@ namespace lab
 			/* should be used with start == this->_root */
 			node	*_treeDelete(node *start, const Key key) // to test
 			{
-				if (start == nullptr)
+				if (start == nullptr) // case target is NULL
 					return (nullptr);
-				else if (key < start->_val.first)
+				else if (key < start->_val.first) // case key inferior to start node
 					start->_left = this->_treeDelete(start->_left, key);
-				else if (key > start->_val.first)
+				else if (key > start->_val.first) // case key superior to start node
 					start->_right = this->_treeDelete(start->_right, key);
-				else
+				else // we reach node target, now we have to make relevant ops
 				{
-					if (start->_left == nullptr && start->_right == nullptr)
+					if (start->_left == nullptr && start->_right == nullptr) // case target got no child
 					{
-						this->_delete_node(start);
+						this->_deleteNode(start);
 						start = nullptr;
 					}
-					else if (start->_left == nullptr)
+					else if (start->_left == nullptr) // case target got only right child
 					{
 						node	*tmp = start;
 						
 						start = start->_right;
-						this->_delete_node(tmp);
+						this->_deleteNode(tmp);
+						tmp = nullptr;
 					}
-					else if (start->_right == nullptr)
+					else if (start->_right == nullptr) // case target got only left child
 					{
 						node	*tmp = start;
 						
 						start = start->_left;
-						this->_delete_node(tmp);	
+						this->_deleteNode(tmp);
+						tmp = nullptr;
 					}
-					else
+					else // case taget has two children node left and right
 					{
-						node	*tmp = getTreeMin(start->_right);
-
-						start->_val.first = tmp->_val.first;
+						node	*tmp = this->_root->getTreeMin(start->_right);
+						node	*newNode = this->_replace_key(start, tmp->_val);
+						
+						this->_deleteNode(start);
+						start = newNode;
 						start->_right = _treeDelete(start->_right, tmp->_val.first);
 					}
-					return (start);
 				}
+				return (start);
 			}
 
+			/* create a copy of a node, but with another key,
+			then replace links from other links from target to newNode */
+			node	*_replace_key(node *target, value_type newPair) // to test
+			{
+				node	*newNode = this->_createNewNode(newPair);
+
+				newNode->_color = target->_color;
+				newNode->_parent = target->_parent;
+				newNode->_left = target->_left;
+				newNode->_right = target->_right;
+				if (target->_parent != nullptr)
+				{
+					if (target->_parent->_right
+						&& target->_parent->_right->_val.first == target->_val.first)
+						target->_parent->_right = newNode;
+					else
+						target->_parent->_left = newNode;
+				}
+				if (target->_right != nullptr)
+					target->_right->_parent = newNode;
+				if (target->_left != nullptr)
+					target->_left->_parent = newNode;
+				return (newNode);
+			}
 			/* RBT FUNCTIONS */
 	};
 }
