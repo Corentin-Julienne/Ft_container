@@ -14,8 +14,8 @@
 # define ENABLE_IF_HPP
 
 /* enable_if is related to SFINAE (see next paragraph). enable_if check wether a condition is true,
- and enable the template substitution by the compiler. Otherwise, it makes it fails in a SFINAE way,
- using an ill-formed implementation intentionally */
+and enable the template substitution by the compiler. Otherwise, it makes it fails in a SFINAE way,
+using an ill-formed implementation intentionally */
 
 /* SFINAE (Substitution Failure Is Not An Error) refers to the fact that the compiler will try every template 
 possibility (type, including the ones provide by template specialization) in order to find a valid substitution. 

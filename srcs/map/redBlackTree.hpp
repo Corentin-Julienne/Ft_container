@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:56 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/25 12:29:17 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/28 16:41:46 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@
 
 #include "Node.hpp"
 
-namespace lab
+namespace ft
 {
 	template < 
 		class Key,
 		class T,
-		class Alloc = std::allocator<std::pair<const Key, T> > > 
+		class Alloc = std::allocator<std::pair<const Key, T> > 
+	> 
 	class redBlackTree
 	{			
 		public:
@@ -47,10 +48,7 @@ namespace lab
 				this->_node_alloc = std::allocator<node>();
 			}
 
-			~redBlackTree()
-			{
-				this->postOrderTraversal(this->_root);
-			}
+			~redBlackTree() { this->postOrderTraversalDeletion(this->_root); };
 
 			redBlackTree(const redBlackTree &original) : _root(original._root), _nil(original._nil), _size(original._size),
 			_pair_alloc(original._pair_alloc), _node_alloc(original._node_alloc) {};
@@ -67,8 +65,11 @@ namespace lab
 				return *this;
 			}
 
-			/* UTILS */
+			/* GETTERS */
+			
+			size_type	getSize(void) { return (this->_size); };
 
+			/* UTILS */
 			void	addAndInsert(const value_type &val) // to test
 			{
 				node		*newNode = this->_createNewNode(val);
@@ -76,18 +77,18 @@ namespace lab
 				this->_treeInsert(newNode);
 			}
 
-			void	deleteNode(const Key &key)
+			void	deleteNode(const Key &key) // to test
 			{
 				this->_treeDelete(this->_root, key);
 			}
 
 			/* to cover the full tree, elem must be equal to this->_root */
-			void	postOrderTraversal(node *elem) // to test
+			void	postOrderTraversalDeletion(node *elem) // to test
 			{
 				if (elem != nullptr)
 				{
-					this->postOrderTraversal(elem->_left);
-					this->postOrderTraversal(elem->_right);
+					this->postOrderTraversalDeletion(elem->_left);
+					this->postOrderTraversalDeletion(elem->_right);
 					this->_deleteNode(elem);
 				}
 			}
@@ -170,6 +171,8 @@ namespace lab
 					y->_left = z;
 				else
 					y->_right = z;
+				// add to the size of the binary search tree
+				this->_size++;
 			}
 
 			/* should be used with start == this->_root */
@@ -214,9 +217,13 @@ namespace lab
 						start->_right = _treeDelete(start->_right, tmp->_val.first);
 					}
 				}
+				// withdraw one to size of the binary search tree
+				this->_size--;
 				return (start);
 			}
 
+			/* HELPERS */
+			
 			/* create a copy of a node, but with another key,
 			then replace links from other links from target to newNode */
 			node	*_replace_key(node *target, value_type newPair) // to test
@@ -367,6 +374,8 @@ namespace lab
 					}
 				}
 				this->_root->_color = BLACK; // rule 2 : root node is ALLWAYS black
+				// add 1 to tree->_size
+				this->_size++;
 			}
 
 			/* performs deletion without changes in a RBT. start needs to be equal to this->_root */
@@ -410,6 +419,8 @@ namespace lab
 					y->_color = target->_color;
 				}
 				this->_deleteNode(target); //destroy targetted node
+				// withdraw 1 to tree size
+				this->_size--;
 				this->_redBlackTreeFixPostDeletion(this->_root, x);
 			}
 

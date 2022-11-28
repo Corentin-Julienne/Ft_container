@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:40:57 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/17 13:45:35 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/28 16:45:33 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include <functional>
 
 # include "../utils/pair.hpp"
+# include "./MapIterator.hpp"
+# include "../utils/reverseIterator.hpp"
+# include "./redBlackTree.hpp"
 
 namespace ft
 {
@@ -49,9 +52,12 @@ namespace ft
 			typedef typename std::size_t 					size_type;
 			typedef typename std::ptrdiff_t 				difference_type;
 			// iterators to put there
-			// reverse iterators
-			typedef std::reverse_iterator<iterator> 		reverse_iterator;
-			typedef std::reverse_iterator<const_iterator> 	const_reverse_iterator;
+			typedef ft::MapIterator<Key, T>					iterator;
+			typedef ft::MapIterator<Key, T, true>			const_iterator;
+			typedef ft::reverseIterator<iterator> 			reverse_iterator;
+			typedef ft::reverseIterator<const_iterator> 	const_reverse_iterator;
+			// tree
+			typedef ft::redBlackTree<Key, T, Alloc>			binary_tree;
 
 		/* CLASS TO COMPARE KEYS */
 
@@ -80,10 +86,8 @@ namespace ft
 		/* CONSTRUCTORS, DESTRUCTOR, COPY, OVERLOADING ASSIGNMENT OPERATOR (COPLIEN FORM) */
 
 			/* default constructor, create empty map */
-			explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-			{
-				// TODO
-			}
+			explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
+			_alloc(alloc), _comparator(comp), _tree(nullptr) {}
 
 			/* range constructor */
 			template <class InputIterator>
@@ -94,38 +98,38 @@ namespace ft
 			}
 
 			/* copy constructor */
-			map(const map& x)
-			{
-				// TODO
-			}
+			map(const map& x) : _tree(x._tree), _alloc(x._alloc), _comparator(x._comparator) {};
 
 			/* destructor */
-			virtual	~map()
-			{
-				// TODO
-			}
+			virtual	~map() {}
 
 			/* overloading operator = */
 			map&	operator=(const map& x)
 			{
-				// TODO
+				if (this != &x)
+				{
+					this->_tree = x._tree;
+					this->_comparator = x._comparator;
+					this->_alloc = x._alloc;
+				}
+				return *this;
 			}
 
 		/* METHODS RELATIVE TO MAP CAPACITY */
 
-			bool	empty(void) const
+			bool	empty(void) const // to test
 			{
-				// TODO
+				return (this->_tree->getSize() == 0);
 			}
 
-			size_type	size(void) const
+			size_type	size(void) const // to test
 			{
-				// TODO
+				return (this->_tree->getSize());
 			}
 
-			size_type	max_size(void) const
+			size_type	max_size(void) const // to test
 			{
-				// TODO
+				return (this->_alloc.max_size());
 			}
 
 		/* METHODS RELATIVE TO MAP'S ELEMENTS ACCESS */
@@ -147,7 +151,7 @@ namespace ft
 
 		/* METHODS RELATIVE TO MAP MODIFICATION */
 
-			pair<iterator,bool>	insert(const value_type& val)
+			pair<iterator, bool>	insert(const value_type& val)
 			{
 				// TODO
 			}
@@ -196,8 +200,14 @@ namespace ft
 		
 			allocator_type	get_allocator(void) const
 			{
-				// TODO
+				return (this->_alloc);
 			}
+		
+		private:
+
+			binary_tree			*_tree;
+			allocator_type		_alloc;
+			key_compare			_comparator;
 	};
 	
 	template <class Key, class T, class Compare, class Alloc>
@@ -236,7 +246,7 @@ namespace ft
 		// TODO
 	}
 
-	template < class Key, class T, class Compare, class Alloc >
+	template <class Key, class T, class Compare, class Alloc>
 	void	swap(map<Key, T, Compare, Alloc>& lhs, map<Key, T, Compare, Alloc>& rhs)
 	{
 		// TODO
