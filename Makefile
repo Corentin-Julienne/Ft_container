@@ -6,13 +6,13 @@
 #    By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/25 16:33:33 by cjulienn          #+#    #+#              #
-#    Updated: 2022/11/14 12:59:08 by cjulienn         ###   ########.fr        #
+#    Updated: 2022/11/29 17:00:19 by cjulienn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = Containers # change this ?
 
-SRCS = ./my_main.cpp \
+SRCS = ./tests/my_main.cpp \
 	   ./tests/Colors.cpp
 
 OBJS = $(SRCS:.cpp=.o)

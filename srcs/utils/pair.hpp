@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:46:29 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/05 17:37:18 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/29 17:01:50 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,29 @@ namespace ft
 	struct	pair
 	{
 		/* default constructor */
-		pair(void) : _first_type(), _second_type() {};
+		pair(void) : first(), second() {};
 
 		/* initialization constructor */
-		pair(const T1& a, const T2& b) : _first_type(a), _second_type(b) {};
+		pair(const T1& a, const T2& b) : first(a), second(b) {};
 
 		/* copy constructor */
 		template<class U, class V>
-		pair(const pair<U, V>& pr) : _first_type(pr._first_type), _second_type(pr._second_type) {};
+		pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {};
 
 		/* overloading operator = */
 		pair&	operator=(const pair& pr)
 		{
 			if (this != pr)
 			{
-				_first_type = pr._first_type;
-				_second_type = pr._second_type;
+				first = pr.first;
+				second = pr.second;
 			}
 			return *this;
 		};
 
 		/* member variables */
-		T1		_first_type;
-		T2		_second_type;
+		T1		first;
+		T2		second;
 	};
 
 	/* make_pair : call pair constructor and return a pair object */

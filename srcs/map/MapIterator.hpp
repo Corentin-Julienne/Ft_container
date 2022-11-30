@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:41:03 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/28 11:59:50 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/29 15:11:07 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../utils/iteratorTraits.hpp"
 # include "../utils/enableConst.hpp"
+# include "../utils/pair.hpp"
 # include "./Node.hpp" // add this
 
 # include <limits>
@@ -37,7 +38,7 @@ namespace ft
 			/* ALIASES */
 			typedef Key																			key_type;
 			typedef T																			mapped_type;
-			typedef std::pair<const Key, T> 													value_type;		
+			typedef ft::pair<const Key, T> 														value_type;		
 			typedef std::ptrdiff_t																difference_type;
 			typedef std::size_t																	size_type;
 			typedef typename ft::enable_const<IsConst, *value_type, const *value_type>::type	pointer;
@@ -51,13 +52,21 @@ namespace ft
 
 			/* CONSTRUCTORS, DESTRUCTORS, OVERLOAD OPERATOR = */
 			
-			MapIterator(void) : _node(nullptr), _end_reached(false) {};
+			MapIterator(void) : _node(nullptr), _end_reached(false) {}; // to test
 
-			MapIterator(const MapIterator<Key, T, IsConst> &original) : _node(original._node), _end_reached(original._end_reached) {};
+			MapIterator(node *target) : _node(target), _end_reached(false) // to test
+			{
+				if (target == nullptr)
+					this->_end_reached = true;
+				
+			}
+
+			MapIterator(const MapIterator<Key, T, IsConst> &original) : _node(original._node),
+			_end_reached(original._end_reached) {};
 
 			~MapIterator() {};
 			
-			MapIterator&	operator=(const MapIterator<Key, T> &original)
+			MapIterator&	operator=(const MapIterator<Key, T> &original) // to test
 			{
 				if (this != &original)
 				{
@@ -68,7 +77,7 @@ namespace ft
 			}
 
 			/* OVERLOADS OPERATORS */
-			MapIterator&	operator++(void)
+			MapIterator&	operator++(void) // to test
 			{
 				node		*tmp = this->_node;
 
@@ -80,7 +89,7 @@ namespace ft
 				return *this;
 			}
 
-			MapIterator&	operator--(void)
+			MapIterator&	operator--(void) // to test
 			{
 				node		*tmp;
 				tmp->getTreePred(tmp);
@@ -91,7 +100,7 @@ namespace ft
 				return *this;
 			}
 
-			MapIterator&	operator++(int)
+			MapIterator&	operator++(int) // to test
 			{
 				node		*tmp = this->_node;
 				
@@ -99,7 +108,7 @@ namespace ft
 				return (tmp);
 			}
 
-			MapIterator&	operator--(int)
+			MapIterator&	operator--(int) // to test
 			{
 				node		*tmp = this->_node;
 				
@@ -107,14 +116,14 @@ namespace ft
 				return (tmp);
 			}
 
-			MapIterator&	operator*(void) const // dereferencing
+			reference	operator*(void) const // dereferencing // to test
 			{
-
+				return (this->_node->_val);			
 			}
 
-			MapIterator*	operator->(void) const // give pointer address
+			pointer		operator->(void) const // give pointer address // to test
 			{
-				
+				return (&this->_node->_val);
 			}
 
 			/* EQUIVALENCY OPERATORS */

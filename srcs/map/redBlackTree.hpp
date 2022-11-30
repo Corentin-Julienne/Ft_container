@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:56 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/28 16:41:46 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/11/29 17:03:08 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@
 #include <string>
 
 #include "Node.hpp"
+#include "../utils/pair.hpp"
 
 namespace ft
 {
 	template < 
 		class Key,
 		class T,
-		class Alloc = std::allocator<std::pair<const Key, T> > 
+		class Alloc = std::allocator<ft::pair<const Key, T> > 
 	> 
 	class redBlackTree
 	{			
@@ -67,16 +68,45 @@ namespace ft
 
 			/* GETTERS */
 			
-			size_type	getSize(void) { return (this->_size); };
+			size_type	getSize(void)	{ return (this->_size); };
+			node*		getRoot(void)	{ return (this->_root); };
+			node*		getMin(void)	{ return (this->_root->getTreeMin(this->_root)); };
+			node*		getMax(void)	{ return (this->_root->getTreeMax(this->_root)); };
+			
+			mapped_type&	getValOfKey(const Key &key)
+			{
+				return (this->_root->getTreeSearch(this->_root, key));
+			}
+		
+			/* PUBLIC METHODS */
 
-			/* UTILS */
-			void	addAndInsert(const value_type &val) // to test
+			/* create a node and insert it using a standard BST methodology */
+			void	BinarySearchTreeInsertion(const value_type &val) // to test
 			{
 				node		*newNode = this->_createNewNode(val);
 				
 				this->_treeInsert(newNode);
 			}
 
+			/* create a node and insert it using a RBT methodology */
+			void	RedBlackTreeInsertion(const value_type &val) // to test
+			{
+				node		*newNode = this->_createNewNode(val);
+				
+				this->_redBlackTreeInsert(newNode);
+			}
+
+			/* check wether a key exists or not */
+			bool	IsKeyAlreadyExisting(const Key &key)
+			{
+				node 	*target = this->_root->getTreeSearch(this->_root, key);
+				
+				if (target == nullptr)
+					return (false);
+				return (true);
+			}
+
+			/* deletes a node by identifying it by its key */
 			void	deleteNode(const Key &key) // to test
 			{
 				this->_treeDelete(this->_root, key);
@@ -113,6 +143,8 @@ namespace ft
 		private:
 
 			/* HELPERS */
+
+			/* delete a node and free its memory */
 			void	_deleteNode(node *target) // to test
 			{
 				this->_pair_alloc.destroy(&target->_val);
@@ -120,7 +152,8 @@ namespace ft
 				target = nullptr;
 			}
 
-			node	*_createNewNode(const value_type &val) // check if useful
+			/* allocate memory for a node creation, then create it */
+			node	*_createNewNode(const value_type &val)
 			{
 				node		*newNode = this->_node_alloc.allocate(1); // alloc space for a node
 
@@ -141,13 +174,48 @@ namespace ft
 					return ;
 				space += indent;
 				this->_printTree(target->_right, space);
-				// prints data
 				std::cout << std::endl;
 				for (int i = indent; i < space; i++)
         			std::cout << " ";
 				std::cout << "[" << target->_val.first << "]" << std::endl;
-				
 				this->_printTree(target->_left, space);
+			}
+
+			/* create a copy of a node, but with another key,
+			then replace links from other links from target to newNode */
+			node	*_replace_key(node *target, value_type newPair) // to test
+			{
+				node	*newNode = this->_createNewNode(newPair);
+
+				newNode->_color = target->_color;
+				newNode->_parent = target->_parent;
+				newNode->_left = target->_left;
+				newNode->_right = target->_right;
+				if (target->_parent != nullptr)
+				{
+					if (target->_parent->_right
+						&& target->_parent->_right->_val.first == target->_val.first)
+						target->_parent->_right = newNode;
+					else
+						target->_parent->_left = newNode;
+				}
+				if (target->_right != nullptr)
+					target->_right->_parent = newNode;
+				if (target->_left != nullptr)
+					target->_left->_parent = newNode;
+				return (newNode);
+			}
+
+			/* returns a copy of a dinamically allocated node (not shallow copy) */
+			node	*_copyNode(node *target)
+			{
+				node	*cpy = this->_createNewNode(target->_val);
+				
+				cpy->_color = target->_color;
+				cpy->_parent = target->_parent;
+				cpy->_left = target->_left;
+				cpy->_right = target->_right;
+				return (cpy);
 			}
 			
 			/* STANDARD BST FUNCTIONS */
@@ -220,45 +288,6 @@ namespace ft
 				// withdraw one to size of the binary search tree
 				this->_size--;
 				return (start);
-			}
-
-			/* HELPERS */
-			
-			/* create a copy of a node, but with another key,
-			then replace links from other links from target to newNode */
-			node	*_replace_key(node *target, value_type newPair) // to test
-			{
-				node	*newNode = this->_createNewNode(newPair);
-
-				newNode->_color = target->_color;
-				newNode->_parent = target->_parent;
-				newNode->_left = target->_left;
-				newNode->_right = target->_right;
-				if (target->_parent != nullptr)
-				{
-					if (target->_parent->_right
-						&& target->_parent->_right->_val.first == target->_val.first)
-						target->_parent->_right = newNode;
-					else
-						target->_parent->_left = newNode;
-				}
-				if (target->_right != nullptr)
-					target->_right->_parent = newNode;
-				if (target->_left != nullptr)
-					target->_left->_parent = newNode;
-				return (newNode);
-			}
-
-			/* returns a copy of a dinamically allocated node (not shallow copy) */
-			node	*_copyNode(node *target)
-			{
-				node	*cpy = this->_createNewNode(target->_val);
-				
-				cpy->_color = target->_color;
-				cpy->_parent = target->_parent;
-				cpy->_left = target->_left;
-				cpy->_right = target->_right;
-				return (cpy);
 			}
 			
 			/* RBT FUNCTIONS */
@@ -405,7 +434,7 @@ namespace ft
 					y = this->_root->getTreeMin(target->_right);
 					y_original_col = y->_color;
 					x = y->_right;
-					if (y->_parent = target)
+					if (y->_parent == target)
 						x->_parent = y;
 					else
 					{
@@ -457,9 +486,9 @@ namespace ft
 						this->_leftRotate(x->_parent);
 						x = this->_root;
 					}
-					else // target == target->_parent->_left
+					else // target == x->_parent->_left
 					{
-						node	*sibling = target->_parent->_left;
+						node	*sibling = x->_parent->_left;
 
 						if (sibling->_color == RED)
 						{
@@ -489,7 +518,6 @@ namespace ft
 				}
 				x->_color = BLACK;
 			}
-			
 	};
 }
 
