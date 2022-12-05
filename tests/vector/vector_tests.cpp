@@ -6,29 +6,444 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:42:21 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/02 16:54:32 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/05 16:56:10 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/test_includes.hpp"
 
-/* tests all constructors and operator = */
-static void	test_constructors(Colors &col)
+/* These test are meant to compare the behaviour of the original std::vector and compares it to its ft::vector
+counterpart.
+
+The tests cover (written in that order) :
+
+I) Constructors
+
+=> 
+
+II) Iterators of vector
+
+=> testing basic iterators and their arithmetics [ static void test_iterator(Colors &col) ]
+=> testing reverse iterators and their arithmetics [ static void test_reverse_iterator(Colors &col) ]
+=> testing const iterators (including const reverse iterators) [ static void test_const_iterator(Colors &col) ]
+
+III) Modificators
+
+=> insert
+=> erase
+=> assign
+
+Does not check for performance. Checks the relevant speedtests to check performance with a large number of data */
+
+/* test all the assign version */
+static void test_assign(Colors &col) // wip
+{
+	separator(col);
+	std::cout << col.bdYellow() << "Testing assign..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+
+	std::cout << "Testing this assign version : template <class InputIterator>"
+	<< "void assign (InputIterator first, InputIterator last);" << std::endl;
+
+	// TO IMPLEMENT
+
+	std::cout << "Testing this assign version : void assign (size_type n, const value_type& val);" << std::endl;
+	
+	// TO IMPLEMENT
+
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "Assign tests over" << col.reset() << std::endl;
+	separator(col);
+}
+
+static void	test_erase(Colors & col) // wip
 {
 	// TO IMPLEMENT
 }
 
 /* test all the insert versions */
-static void test_insertion(Colors &col) // WIP
+static void test_insertion(Colors &col) // to test
 {
+	separator(col);
+	std::cout << col.bdYellow() << "Testing insertion..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+	
 	std::vector<int> 				test;
-	std::vector<int>::iterator		it = test.begin();
 
-	std::cout << "Creating an empty int vector..." << std::endl;
-	std::cout << "Insert a single value" << std::endl;
+	std::cout << "Creating an empty int vector and fill it with 5 values..." << std::endl;
 
-	std::cout << "Insert int of value 4 in vector..." << std::endl;
-	test.insert(it, 4);
+	test.push_back(5);
+	test.push_back(76);
+	test.push_back(-4567);
+	test.push_back(0);
+	test.push_back(-1);
+
+	/* single element insertion */
+	std::cout << "Testing this insert version : iterator insert(iterator position, const value_type &val);" << std::endl;
+
+	std::vector<int>::iterator		it_pos = test.end();
+	std::cout << "Insert a value (42) at the end" << std::endl;
+	test.insert(it_pos, 42);
+	std::cout << "Diplaying the entire vector..." << std::endl;
+	for (std::size_t i; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
+	std::cout << "checking changes in capacity and size" << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity = " << test.capacity() << std::endl;
+
+	std::vector<int>::iterator		it_pos = test.begin();
+	std::cout << "Insert a value (21) at the beginning" << std::endl;
+	test.insert(it_pos, 21);
+	std::cout << "Diplaying the entire vector..." << std::endl;
+	for (std::size_t i; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
+	std::cout << "checking changes in capacity and size" << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity = " << test.capacity() << std::endl << std::endl;
+	
+	/* fill the vector with one value */
+	std::cout << "testing with this insert version : void insert(iterator position, size_type n, const value_type &val);"
+	<< std::endl;
+
+	std::vector<int>::iterator		it_pos = test.end();
+	std::cout << "Inserting 5 values 72 at the end of the test vector" << std::endl;
+	test.insert(it_pos, 5, 72);
+	std::cout << "Diplaying the entire vector..." << std::endl;
+	for (std::size_t i; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
+	std::cout << "checking changes in capacity and size" << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity = " << test.capacity() << std::endl << std::endl;
+	
+	std::vector<int>::iterator		it_pos = test.begin();
+	std::cout << "Inserting 5 values 47 at the beginning of the test vector" << std::endl;
+	test.insert(it_pos, 5 ,47);
+	std::cout << "Diplaying the entire vector..." << std::endl;
+	for (std::size_t i; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
+	std::cout << "checking changes in capacity and size" << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity = " << test.capacity() << std::endl << std::endl;
+	
+	/* insert a range of iterators */
+	std::cout << "testing with this insert version : template <class InputIterator>" << std::endl
+	<< "void insert(iterator position, InputIterator first, InputIterator last);" << std::endl;
+
+	std::vector<int>			new_vect;
+
+	new_vect.push_back(747);
+	new_vect.push_back(666);
+	new_vect.push_back(-7);
+
+	std::vector<int>::iterator	it_beg = new_vect.begin();
+	std::vector<int>::iterator	it_end = new_vect.end();
+
+	std::cout << "Add a range of values at the beginning of test" << std::endl;
+	test.insert(test.begin(), it_beg, it_end);
+	std::cout << "Diplaying the entire vector..." << std::endl;
+	for (std::size_t i; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
+	std::cout << "checking changes in capacity and size" << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity = " << test.capacity() << std::endl << std::endl;
+	
+	std::cout << "Add a range of values at the end of test " << std::endl;
+	test.insert(test.end(), it_beg, it_end);
+	std::cout << "Diplaying the entire vector..." << std::endl;
+	for (std::size_t i; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
+	std::cout << "checking changes in capacity and size" << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity = " << test.capacity() << std::endl << std::endl;
+
+	std::cout << "Add a range of values at the end of test" << std::endl;
+	test.insert(test.begin() + 2, it_beg, it_end);
+	std::cout << "Diplaying the entire vector..." << std::endl;
+	for (std::size_t i; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
+	std::cout << "checking changes in capacity and size" << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity = " << test.capacity() << std::endl << std::endl;
+	
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "insertion tests over" << col.reset() << std::endl;
+	separator(col);
+}
+
+/* check const iterators : const_reverse_iterator AND reverse_iterator */
+static void	test_const_iterator(Colors & col) // WIP
+{
+	separator(col);
+	std::cout << col.bdYellow() << "Testing const iterators..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+
+	std::vector<int>		test;
+	
+	std::vector<int>::const_iterator	const_it_beg = ;
+
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "const iterators tests over" << col.reset() << std::endl;
+	separator(col);
+}
+
+/*  should test reverse iterators functionnality and their behaviours */
+static void	test_reverse_iterator(Colors &col)
+{
+	separator(col);
+	std::cout << col.bdYellow() << "Testing reverse iterators..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+
+	std::vector<int>		test;
+
+	std::cout << "Creating a vector with ints..." << std::endl;
+	
+	test.push_back(5);
+	test.push_back(76);
+	test.push_back(-4567);
+	test.push_back(0);
+	test.push_back(-1);
+
+	std::vector<int>::reverse_iterator		first = test.rbegin();
+	std::vector<int>::reverse_iterator		last = test.rend();
+
+	std::cout << "Check if we can print first and last (test.begin() and test.last() - 1)" << std::endl;
+	std::cout << "first is " << *first << " and last is " << (*last - 1) << std::endl;
+	
+	std::cout << "Try to display all vector values with iterators (reverse order)..." << std::endl;
+	while (first != last)
+	{
+		std::size_t	i = 0;
+		
+		std::cout << "test[" << i << "] = " << *first << std::endl;
+		i++;
+		first++;
+	}
+	
+	std::cout << "Testing reverse_iterator arithmetic..." << std::endl;
+
+	std::cout << "Testing -- operator..." << std::endl;
+	std::vector<int>::reverse_iterator		op_minmin = test.rend();
+	op_minmin--;
+	std::cout << "The iterator, one deferenced, should print the first value of the vector..." << std::endl;
+	std::cout << "The value printed is " << *op_minmin << std::endl << std::endl;
+
+	std::cout << "Testing ++ operator..."<< std::endl;
+	std::vector<int>::reverse_iterator		op_plusplus = test.rbegin();
+	std::cout << "The iterator, once dereference, should print the penultimate value of the vector..." << std::endl;
+	std::cout << "the value printed is " << *(++op_plusplus) << std::endl << std::endl;		
+
+	std::cout << "Testing --(int) operator" << std::endl;
+	std::vector<int>::reverse_iterator		op_minint = test.rbegin() + 1;
+	std::cout << "The iterator, once dereferenced, should print the last value of vector"
+	<< "then display the penultimate value when printing a second time..." << std::endl;
+	std::cout << "dereferncing once = " << *(op_minint--) << " ,then dereferencing again = "
+	<< *op_minint << std::endl << std::endl;
+
+	std::cout << "Testing ++(int) operator..."<< std::endl;
+	std::vector<int>::reverse_iterator		op_plusint = test.rbegin();
+	std::cout << "The iterator, once dereferenced, should print the last value of vector"
+	<< "then display the penultimate value when printing a second time..." << std::endl;
+	std::cout << "dereferncing once = " << *(op_plusint++) << ", then dereferencing again = " << *op_plusint
+	<< std::endl << std::endl;
+
+	std::cout << "Testing - operator..." << std::endl;
+	std::vector<int>::reverse_iterator		op_min = test.rend();
+	std::cout << "Should print the first int stored in the vector" << std::endl;
+	std::cout << "Value printed is : " << *op_min - 1 << std::endl << std::endl;
+
+	std::cout << "Testing + operator..." << std::endl;
+	std::vector<int>::reverse_iterator		op_plus = test.rbegin();
+	std::cout << "Should print the penultimate int stored in the vector" << std::endl;
+	std::cout << "Value printed is : " << *op_plus + 1 << std::endl << std::endl;
+
+	std::cout << "Testing += operator..." << std::endl;
+	std::vector<int>::reverse_iterator		op_plusequal = test.rbegin();
+	op_plusequal += test.size() - 1;
+	std::cout << "Once dereferenced, value printed should be the first value of the vector..." << std::endl;
+	std::cout << "Value printed is " << *op_plusequal << std::endl << std::endl;
+
+	std::cout << "Testing -= operator..." << std::endl;
+	std::vector<int>::reverse_iterator		op_minequal = test.rend();
+	op_plusequal -= test.size() - 1;
+	std::cout << "Once dereferenced, value printed should be the last value of the vector..." << std::endl;
+	std::cout << "Value printed is " << *op_minequal << std::endl << std::endl;
+
+	std::cout << "Testing a mix of iterator arithmetics..." << std::endl;
+	std::vector<int>::reverse_iterator		op_arit1 = test.rbegin();
+	std::vector<int>::reverse_iterator		op_arit2 = test.rend();
+	op_arit1 += 3;
+	op_arit1 -= 2;
+	std::cout << "test.begin += 3, -=2, -1, +2 = " << *(op_arit1 - 1 + 2) << std::endl;
+	op_arit2 -= 3;
+	op_arit2 += 0;
+	++op_arit2;
+	std::cout << "test.end -= 3, +=0, ++1, 1++" << *(op_arit2--) << std::endl << std::endl;
+
+	std::cout << "Testing -> operator (* operator has already being tested a lot)" << std::endl;
+	// TO IMPLEMENT
+
+	std::cout << "Testing relationnal operators..." << std::endl;
+
+	std::cout << "Testing == and !=" << std::endl;
+	std::vector<int>::reverse_iterator		it1 = test.rbegin();
+	std::vector<int>::reverse_iterator		it2 = test.rbegin();
+	std::vector<int>::reverse_iterator		it3 = test.rend();
+
+	std::cout << "it1 and it2 should be differents..." << std::endl;
+	std::cout << "it1 == it2 = " << std::boolalpha << (it1 == it2) << std::endl;
+	std::cout << "it1 != it2 = " << std::boolalpha << (it1 != it2) << std::endl;
+	std::cout << "it1 and it3 should be equals..."<< std::endl;
+	std::cout << "it1 != it3 = " << std::boolalpha << (it1 != it3) << std::endl; 
+	std::cout << "it1 == it3 = " << std::boolalpha << (it1 == it3) << std::endl << std::endl;
+	
+	std::cout << "Testing < and > operators..." << std::endl;
+	std::cout << "it1 should be inferior to it3" << std::endl;
+	std::cout << "it1 < it3 = " << std::boolalpha << (it1 < it3) << std::endl;
+	std::cout << "it1 > it3 = " << std::boolalpha << (it1 > it3) << std::endl << std::endl;
+
+	std::cout << "Testing <= and >= operators..." << std::endl;
+	std::cout << "it1 <= it3 = " << std::boolalpha << (it1 <= it3) << std::endl;
+	std::cout << "it1 >= it3 = " << std::boolalpha << (it1 >= it3) << std::endl;
+	std::cout << "Incrementing it1..." << std::endl;
+	it1++;
+	std::cout << "it1 <= it3 = " << std::boolalpha << (it1 <= it3) << std::endl;
+	std::cout << "it1 >= it3 = " << std::boolalpha << (it1 >= it3) << std::endl<< std::endl;
+	
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "iterator tests over" << col.reset() << std::endl;
+	separator(col);
+}
+
+/*  should test the iterators functionnality and their behaviour */
+static void	test_iterator(Colors &col) // to test
+{
+	separator(col);
+	std::cout << col.bdYellow() << "Testing iterators method..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+	
+	std::vector<int>		test;
+
+	std::cout << "Creating a vector with ints..." << std::endl;
+	
+	test.push_back(5);
+	test.push_back(76);
+	test.push_back(-4567);
+	test.push_back(0);
+	test.push_back(-1);
+
+	std::vector<int>::iterator		first = test.begin();
+	std::vector<int>::iterator		last = test.end();
+
+	std::cout << "Check if we can print first and last (test.begin() and test.last() - 1)" << std::endl;
+	std::cout << "first is " << *first << " and last is " << (*last - 1) << std::endl;
+	
+	std::cout << "Try to display all vector values with iterators..." << std::endl;
+	while (first != last)
+	{
+		std::size_t	i = 0;
+		
+		std::cout << "test[" << i << "] = " << *first << std::endl;
+		i++;
+		first++;
+	}
+	
+	std::cout << "Testing iterator arithmetic..." << std::endl;
+	
+	std::cout << "Testing -- operator..." << std::endl;
+	std::vector<int>::iterator		op_minmin = test.end();
+	op_minmin--;
+	std::cout << "The iterator, one deferenced, should print the last value of the vector..." << std::endl;
+	std::cout << "The value printed is " << *op_minmin << std::endl << std::endl;
+
+	std::cout << "Testing ++ operator..."<< std::endl;
+	std::vector<int>::iterator		op_plusplus = test.begin();
+	std::cout << "The iterator, once dereference, should print the second value of the vector..." << std::endl;
+	std::cout << "the value printed is " << *(++op_plusplus) << std::endl << std::endl;		
+
+	std::cout << "Testing --(int) operator" << std::endl;
+	std::vector<int>::iterator		op_minint = test.begin() + 1;
+	std::cout << "The iterator, once dereferenced, should print the first value of vector"
+	<< "then display the second value when printing a second time..." << std::endl;
+	std::cout << "dereferncing once = " << *(op_minint--) << " ,then dereferencing again = "
+	<< *op_minint << std::endl << std::endl;
+
+	std::cout << "Testing ++(int) operator..."<< std::endl;
+	std::vector<int>::iterator		op_plusint = test.begin();
+	std::cout << "The iterator, once dereferenced, should print the first value of vector"
+	<< "then display the second value when printing a second time..." << std::endl;
+	std::cout << "dereferncing once = " << *(op_plusint++) << ", then dereferencing again = " << *op_plusint
+	<< std::endl << std::endl;
+
+	std::cout << "Testing - operator..." << std::endl;
+	std::vector<int>::iterator		op_min = test.end();
+	std::cout << "Should print the last int stored in the vector" << std::endl;
+	std::cout << "Value printed is : " << *op_min - 1 << std::endl << std::endl;
+
+	std::cout << "Testing + operator..." << std::endl;
+	std::vector<int>::iterator		op_plus = test.begin();
+	std::cout << "Should print the second int stored in the vector" << std::endl;
+	std::cout << "Value printed is : " << *op_plus + 1 << std::endl << std::endl;
+
+	std::cout << "Testing += operator..." << std::endl;
+	std::vector<int>::iterator		op_plusequal = test.begin();
+	op_plusequal += test.size() - 1;
+	std::cout << "Once dereferenced, value printed should be the last value of the vector..." << std::endl;
+	std::cout << "Value printed is " << *op_plusequal << std::endl << std::endl;
+
+	std::cout << "Testing -= operator..." << std::endl;
+	std::vector<int>::iterator		op_minequal = test.end();
+	op_plusequal -= test.size() - 1;
+	std::cout << "Once dereferenced, value printed should be the first value of the vector..." << std::endl;
+	std::cout << "Value printed is " << *op_minequal << std::endl << std::endl;
+
+	std::cout << "Testing a mix of iterator arithmetics..." << std::endl;
+	std::vector<int>::iterator		op_arit1 = test.begin();
+	std::vector<int>::iterator		op_arit2 = test.end();
+	op_arit1 += 3;
+	op_arit1 -= 2;
+	std::cout << "test.begin += 3, -=2, -1, +2 = " << *(op_arit1 - 1 + 2) << std::endl;
+	op_arit2 -= 3;
+	op_arit2 += 0;
+	++op_arit2;
+	std::cout << "test.end -= 3, +=0, ++1, 1++" << *(op_arit2--) << std::endl << std::endl;
+
+	std::cout << "Testing -> operator (* operator has already being tested a lot)" << std::endl;
+	// TO IMPLEMENT
+
+	std::cout << "Testing relationnal operators..." << std::endl;
+
+	std::cout << "Testing == and !=" << std::endl;
+	std::vector<int>::iterator		it1 = test.begin();
+	std::vector<int>::iterator		it2 = test.begin();
+	std::vector<int>::iterator		it3 = test.end();
+
+	std::cout << "it1 and it2 should be equals..." << std::endl;
+	std::cout << "it1 == it2 = " << std::boolalpha << (it1 == it2) << std::endl;
+	std::cout << "it1 != it2 = " << std::boolalpha << (it1 != it2) << std::endl;
+	std::cout << "it1 and it3 should be different..."<< std::endl;
+	std::cout << "it1 != it3 = " << std::boolalpha << (it1 != it3) << std::endl; 
+	std::cout << "it1 == it3 = " << std::boolalpha << (it1 == it3) << std::endl << std::endl;
+	
+	std::cout << "Testing < and > operators..." << std::endl;
+	std::cout << "it1 should be superior to it3" << std::endl;
+	std::cout << "it1 < it3 = " << std::boolalpha << (it1 < it3) << std::endl;
+	std::cout << "it1 > it3 = " << std::boolalpha << (it1 > it3) << std::endl << std::endl;
+
+	std::cout << "Testing <= and >= operators..." << std::endl;
+	std::cout << "it1 <= it3 = " << std::boolalpha << (it1 <= it3) << std::endl;
+	std::cout << "it1 >= it3 = " << std::boolalpha << (it1 >= it3) << std::endl;
+	std::cout << "Incrementing it1..." << std::endl;
+	it1++;
+	std::cout << "it1 <= it3 = " << std::boolalpha << (it1 <= it3) << std::endl;
+	std::cout << "it1 >= it3 = " << std::boolalpha << (it1 >= it3) << std::endl<< std::endl;
+	
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "iterator tests over" << col.reset() << std::endl;
+	separator(col);
+}
+
+/* tests all constructors and operator = */
+static void	test_constructors(Colors &col)
+{
+	// TO IMPLEMENT
 }
 
 /* pop_back test battery 
@@ -119,7 +534,7 @@ static void test_pop_back(Colors &col) // to test
 => capacity
 => empty
 => reserve */
-static void	test_capacity_methods(Colors &col)
+static void	test_capacity_methods(Colors &col) // WIP
 {
 	separator(col);
 	std::cout << col.bdYellow() << "Testing capacity methods..." << col.reset()
@@ -309,11 +724,6 @@ static void	test_assign(Colors &col)
 	std::cout << std::endl << col.bdYellow() << "Assign tests over" << col.reset() << std::endl;
 	separator(col);
 }
-
-
-
-
-
 
 /* all the tests to assess the viability of ft::vector */
 void	vector_verif_procedure(Colors &col)

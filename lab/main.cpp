@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/24 12:48:01 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/05 16:33:32 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include <iostream>
 #include <memory>
 #include <algorithm>
-
-#include "redBlackTree.hpp"
+#include <vector>
 
 void	leaks_tracking(void)
 {
@@ -26,21 +25,17 @@ int main(void)
 {
 	atexit(leaks_tracking);
 	
-	lab::redBlackTree<int, std::string>	 tree;
+	std::vector<int>				test;
+	std::vector<int>				new_vect;
 
-	// std::pairs
-	std::pair<int, std::string>	data1 = std::make_pair<int, std::string>(10, "truc");
-	std::pair<int, std::string>	data2 = std::make_pair<int, std::string>(5, "rob");
-	std::pair<int, std::string>	data3 = std::make_pair<int, std::string>(15, "jason");  
+	new_vect.push_back(747);
+	new_vect.push_back(666);
+	new_vect.push_back(-7);
 
-	/* testing procedure */
-	tree.addAndInsert(data1);
-	tree.addAndInsert(data2);
-	tree.addAndInsert(data3);
+	test.push_back(4);
 
-	tree.deleteNode(5);
-	/* printing results */
-	tree.printTree();
-
+	test.insert(test.begin(), new_vect.begin(), new_vect.end());
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "index [" << i << "] = " << test[i] << std::endl;
 	return (0);
 }
