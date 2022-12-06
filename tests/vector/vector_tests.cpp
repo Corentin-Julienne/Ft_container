@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:42:21 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/05 16:56:10 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/06 13:09:19 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,258 @@ The tests cover (written in that order) :
 
 I) Constructors
 
-=> 
+=> basic constructors, advanced constructors
 
-II) Iterators of vector
+II) Capacity
+
+III) Element access
+
+IV) Iterators of vector
 
 => testing basic iterators and their arithmetics [ static void test_iterator(Colors &col) ]
 => testing reverse iterators and their arithmetics [ static void test_reverse_iterator(Colors &col) ]
 => testing const iterators (including const reverse iterators) [ static void test_const_iterator(Colors &col) ]
 
-III) Modificators
+V) Modificators
 
+=> assign
+=> push_back
+=> pop_back
 => insert
 => erase
-=> assign
+=> swap
+=> clear
 
 Does not check for performance. Checks the relevant speedtests to check performance with a large number of data */
 
+static void	test_constructors(Colors &col) // to test
+{
+	separator(col);
+	std::cout << col.bdYellow() << "Testing constructors..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+
+	std::cout << "Testing basic constructors (empty vector)" << std::endl;
+	
+	std::cout << "Trying with an int vector..." << std::endl;
+	std::vector<int>			test_int;
+	for (std::size_t i = 0; i < test_int.size(); i++)
+		std::cout << "test[" << i << "] = " << test_int[i] << std::endl;
+	std::cout << "test size = " << test_int.size() << " and test capacity is " << test_int.capacity()
+	<< std::endl << std::endl;
+	
+	std::cout << "Trying with a std::string vector..." << std::endl;
+	std::vector<std::string>	test_str;
+	for (std::size_t i = 0; i < test_str.size(); i++)
+		std::cout << "test[" << i << "] = " << test_str[i] << std::endl;
+	std::cout << "test size = " << test_str.size() << " and test capacity is " << test_str.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "Testing the following adavanced constructor : " << std::endl <<
+	"explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());"
+	<< std::endl;
+	
+	std::cout << "testing with an int vector" << std::endl;
+	std::vector<int>		fill_int(42, 42);
+	for (std::size_t i = 0; i < fill_int.size(); i++)
+		std::cout << "test[" << i << "] = " << fill_int[i] << std::endl;
+	std::cout << "test size = " << fill_int.size() << " and test capacity is " << fill_int.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "testing with a std::string vector" << std::endl;
+	std::vector<std::string>	fill_str(42, "test");
+	for (std::size_t i = 0; i < fill_str.size(); i++)
+		std::cout << "test[" << i << "] = " << fill_str[i] << std::endl;
+	std::cout << "test size = " << fill_str.size() << " and test capacity is " << fill_str.capacity()
+	<< std::endl << std::endl;
+	
+	std::cout << "Testing with an int but filling o times the val 42" << std::endl;
+	std::vector<int>	empty_int(0, 42);
+	for (std::size_t i = 0; i < empty_int.size(); i++)
+		std::cout << "test[" << i << "] = " << empty_int[i] << std::endl;
+	std::cout << "test size = " << empty_int.size() << " and test capacity is " << empty_int.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "Testing with the following adavanced constructor :" << std::endl
+	<< "template <class InputIterator>" << std::endl <<
+	"vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());" << std::endl;
+
+	std::cout << "Testing with a vector of int" << std::endl;
+	std::vector<int> 	transfer_int;
+
+	transfer_int.push_back(42);
+	transfer_int.push_back(21);
+
+	std::vector<int>	range_int(transfer_int.begin(), transfer_int.end());
+	for (std::size_t i = 0; i < range_int.size(); i++)
+		std::cout << "test[" << i << "] = " << range_int[i] << std::endl;
+	std::cout << "test size = " << range_int.size() << " and test capacity is " << range_int.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "Testing with a vector of std::string" << std::endl;
+	std::vector<std::string>	transfer_str;
+
+	transfer_str.push_back("this is a ");
+	transfer_str.push_back(" bloody test");
+	
+	std::vector<std::string>	range_str(transfer_str.begin(), transfer_str.end());
+	for (std::size_t i = 0; i < range_str.size(); i++)
+		std::cout << "test[" << i << "] = " << range_str[i] << std::endl;
+	std::cout << "test size = " << range_str.size() << " and test capacity is " << range_str.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "Testing with copy constructor" << std::endl;
+	std::vector<int>		copy_test;
+
+	copy_test.push_back(21);
+	copy_test.push_back(42);
+
+	std::vector<int>		copy(copy_test);
+	for (std::size_t i = 0; i < copy.size(); i++)
+		std::cout << "test[" << i << "] = " << copy[i] << std::endl;
+	std::cout << "test size = " << copy.size() << " and test capacity is " << copy.capacity()
+	<< std::endl << std::endl;
+	
+	std::cout << "testing if modify one modify the other one" << std::endl;
+	copy.push_back(666);
+	for (std::size_t i = 0; i < 3; i++)
+	{
+		std::cout << "copy[" << i << "] = " << copy.at(i) << std::endl;
+		std::cout << "copy_test[" << i << "] = " << copy_test.at(i) << std::endl;
+	}
+	
+	std::cout << std::endl << "Testing with overloaded operator =" << std::endl;
+	std::vector<int>	copy_equal = copy_test;
+	for (std::size_t i = 0; i < copy_equal.size(); i++)
+		std::cout << "test[" << i << "] = " << copy_equal[i] << std::endl;
+	std::cout << "test size = " << copy_equal.size() << " and test capacity is " << copy_equal.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "testing if modify one modify the other one" << std::endl;
+	copy_equal.push_back(666);
+	for (std::size_t i = 0; i < 3; i++)
+	{
+		std::cout << "copy_equal[" << i << "] = " << copy_equal.at(i) << std::endl;
+		std::cout << "copy_test[" << i << "] = " << copy_test.at(i) << std::endl;
+	}	
+
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "Constructors tests over" << col.reset() << std::endl;
+	separator(col);
+}
+
+
+/* !!! an invalid position or range causes undefined behaviour !!! */
+static void	test_erase(Colors &col) // to test
+{
+	separator(col);
+	std::cout << col.bdYellow() << "Testing erase..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+
+	std::cout << "Testing this erase version : iterator erase (iterator position);" << std::endl;
+	
+	std::vector<int>		test;
+
+	test.push_back(5);
+	test.push_back(76);
+	test.push_back(-4567);
+	test.push_back(0);
+	test.push_back(-1);
+	
+	std::cout << "Creates a test vector and push_back 5 values..." << std::endl;
+
+	std::cout << "Remove the first value using iterator begin" << std::endl;
+	test.erase(test.begin());
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "Remove the second value of test vector" << std::endl;
+	test.erase(test.begin() + 1);
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "Remove the last value of test vector" << std::endl;
+	test.erase(test.end() - 1);
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+	
+	std::cout << "Trying to use remove using the iterator test.end()" << std::endl;
+	test.erase(test.end());
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	// ---------------------------------------------------------------------------------------------------- //
+	std::cout << "Testing this erase version : iterator erase (iterator first, iterator last);" << std::endl;
+
+	std::cout << "push back some new value to the test vector" << std::endl;
+	
+	test.push_back(42);
+	test.push_back(21);
+	test.push_back(456);
+	test.push_back(43);
+	
+	std::cout << "displaying the updated vector.." << std::endl;
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "remove the first and second values" << std::endl;
+	test.erase(test.begin(), test.begin() + 1);
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "remove using the same iterator (i.e. begin)" << std::endl;
+	test.erase(test.begin(), test.begin());
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+	
+	std::cout << "Add some values to test" << std::endl;
+	test.push_back(42);
+	test.push_back(21);
+	test.push_back(456);
+	test.push_back(43);
+
+	std::cout << "displaying the updated vector.." << std::endl;
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "remove using the same iterator (i.e. end)" << std::endl;
+	test.erase(test.end(), test.end());
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	std::cout << "removing all values using both begin and end iterators" << std::endl;
+	test.erase(test.begin(), test.end());
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "Erase tests over" << col.reset() << std::endl;
+	separator(col);
+}
+
 /* test all the assign version */
-static void test_assign(Colors &col) // wip
+static void test_assign(Colors &col) // to test
 {
 	separator(col);
 	std::cout << col.bdYellow() << "Testing assign..." << col.reset()
@@ -46,20 +280,104 @@ static void test_assign(Colors &col) // wip
 	std::cout << "Testing this assign version : template <class InputIterator>"
 	<< "void assign (InputIterator first, InputIterator last);" << std::endl;
 
-	// TO IMPLEMENT
+	std::vector<int>			test;
 
+	test.push_back(5);
+	test.push_back(76);
+	test.push_back(-4567);
+	test.push_back(0);
+	test.push_back(-1);
+
+	std::cout << "Create an empty vector and adding some values in it..." << std::endl;
+	std::cout << "display vector content : " << std::endl;
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is " << test.capacity()
+	<< std::endl << std::endl;
+
+	std::vector<int>			other_vect;
+
+	test.push_back(42);
+	test.push_back(21);
+	test.push_back(17);
+	
+	std::vector<int>::iterator	it_beg = other_vect.begin();
+	std::vector<int>::iterator	it_end = other_vect.end();
+
+	std::cout << "Create another vector and its iterators begin and end..." << std::endl;
+	std::cout << "Displaying this other vector" << std::endl;
+	for (std::size_t i = 0; i< other_vect.size(); i++)
+		std::cout << "other_vect[" << i << "] = " << other_vect[i] << std::endl;
+	std::cout << "other_vect size = " << other_vect.size() << " and other_vect capacity is "
+	<< other_vect.capacity() << std::endl << std::endl;
+
+	std::cout << "using insert to replace the content of test vector by other_vect" << std::endl;
+	test.assign(it_beg, it_end);
+	std::cout << "Displaying the test vector after modifs" << std::endl;
+	for (std::size_t i = 0; i< test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is "
+	<< test.capacity() << std::endl << std::endl;
+
+	std::cout << "Testing assign with iterators from the same container" << std::endl;
+	test.assign(test.begin(), test.end());
+	std::cout << "Displaying the test vector after modifs" << std::endl;
+	for (std::size_t i = 0; i< test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is "
+	<< test.capacity() << std::endl << std::endl;
+
+	std::cout << "Testing assign with iterators from the same container again" << std::endl;
+	test.assign(test.begin() + 1, test.end());
+	std::cout << "Displaying the test vector after modifs" << std::endl;
+	for (std::size_t i = 0; i< test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is "
+	<< test.capacity() << std::endl << std::endl;
+
+	std::cout << "Testing with iterators from another container of size 1" << std::endl;
+	std::vector<int>		test2;
+	test2.push_back(42);
+	test.assign(test2.begin(), test2.end());
+	std::cout << "Displaying the test vector after modifs" << std::endl;
+	for (std::size_t i = 0; i< test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is "
+	<< test.capacity() << std::endl << std::endl;
+
+	std::cout << "Testing reallocation with a bigger vector" << std::endl;
+	std::vector<int>		test3;
+	test3.push_back(47);
+	test3.push_back(3456);
+	test.assign(test3.begin(), test3.end());
+	std::cout << "Displaying the test vector after modifs" << std::endl;
+	for (std::size_t i = 0; i< test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is "
+	<< test.capacity() << std::endl << std::endl;
+	
+	// ------------------------------------------------------------------------------------------------------//
 	std::cout << "Testing this assign version : void assign (size_type n, const value_type& val);" << std::endl;
 	
-	// TO IMPLEMENT
+	std::cout << "assigning 42 times copies of values 42 to the test vector" << std::endl;
+	test.assign(42, 42);
+	std::cout << "Displaying the test vector after modifs" << std::endl;
+	for (std::size_t i = 0; i< test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is "
+	<< test.capacity() << std::endl << std::endl;
+
+	std::cout << "assigning 0 times copies of values 42 to the test vector" << std::endl;
+	test.assign(42, 42);
+	std::cout << "Displaying the test vector after modifs" << std::endl;
+	for (std::size_t i = 0; i< test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test size = " << test.size() << " and test capacity is "
+	<< test.capacity() << std::endl << std::endl;
 
 	separator(col);
 	std::cout << std::endl << col.bdYellow() << "Assign tests over" << col.reset() << std::endl;
 	separator(col);
-}
-
-static void	test_erase(Colors & col) // wip
-{
-	// TO IMPLEMENT
 }
 
 /* test all the insert versions */
@@ -676,54 +994,6 @@ static void	test_access_elems(Colors &col) // to test
 	separator(col);
 }
 
-/* testing the method assign of vector */
-static void	test_assign(Colors &col)
-{
-	separator(col);
-	std::cout << col.bdYellow() << "Testing assign method..." << col.reset()
-	<< std::endl << std::endl;
-	separator(col);
-
-	std::vector<int>		test;
-
-	test.push_back(5);
-	test.push_back(76);
-	test.push_back(-4567);
-	test.push_back(0);
-	test.push_back(-1);
-	
-	std::cout << "Creates a vector and push back 5 values..." << std::endl;
-	std::cout << "vector size = " << test.size() << std::endl;
-	std::cout << "vector capacity = " << test.capacity() << std::endl;
-	for (std::size_t i; i < test.size(); i++)
-		std::cout << "index [" << i << "] = " << test[i] << std::endl;
-	
-	/* assign with single value, without iterators */
-	std::cout << "replace content with assign" << std::endl;
-	test.assign(6, 42);
-	std::cout << "vector size = " << test.size() << std::endl;
-	std::cout << "vector capacity = " << test.capacity() << std::endl;
-	for (std::size_t i; i < test.size(); i++)
-		std::cout << "index [" << i << "] = " << test[i] << std::endl;
-	
-	/* assign with iterators */
-	std::vector<int>					other;
-	std::vector<int>::iterator			itb = other.begin();
-	std::vector<int>::iterator			ite = other.end();
-
-	other.push_back(21);
-	other.push_back(42);
-	other.push_back(72);
-
-	std::cout << "replace content with a range of iterators" << std::endl;
-	test.assign(itb, ite); // should work, but test
-	
-	
-	
-	separator(col);
-	std::cout << std::endl << col.bdYellow() << "Assign tests over" << col.reset() << std::endl;
-	separator(col);
-}
 
 /* all the tests to assess the viability of ft::vector */
 void	vector_verif_procedure(Colors &col)
