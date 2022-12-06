@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/06 11:34:38 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/06 17:55:23 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
+#include <ctime>
 
 void	leaks_tracking(void)
 {
@@ -25,13 +26,13 @@ int main(void)
 {
 	atexit(leaks_tracking);
 	
-	std::vector<int>				test;
+	// beginning test
+	std::time_t			test_start = std::time(nullptr);
+	std::vector<int>	std_test;
 
-	test.push_back(4);
-
-	test.assign(0, 42);
-	for (std::size_t i = 0; i < test.size(); i++)
-		std::cout << "index [" << i << "] = " << test[i] << std::endl;
-	std::cout << test.size() << std::endl;
+	for (std::size_t i = 0; i < 10000; i++)
+		std_test.push_back(i);
+	std::time_t			test_end = std::time(nullptr);
+	std::cout << "Time elapsed = " << test_end - test_start << std::endl;	
 	return (0);
 }

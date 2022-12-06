@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:42:21 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/06 13:09:19 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/06 16:29:09 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,70 @@ V) Modificators
 => clear
 
 Does not check for performance. Checks the relevant speedtests to check performance with a large number of data */
+
+static void	test_equivalency_ops(Colors &col) // wip
+{
+	separator(col);
+	std::cout << col.bdYellow() << "Testing equivalency operators..." << col.reset()
+	<< std::endl << std::endl;
+	separator(col);
+
+	std::vector<int>		comp1;
+
+	comp1.push_back(42);
+	comp1.push_back(17);
+
+	std::vector<int>		comp2(comp1.begin(), comp1.end());
+
+	std::cout << "compare two equivalent int vectors" << std::endl;
+	std::cout << "(comp1 == comp2) = " << std::boolalpha << (comp1 == comp2) << std::endl;
+	std::cout << "(comp1 != comp2) = " << std::boolalpha << (comp1 != comp2) << std::endl;
+	
+	std::cout << "compare two vectors with int vectors of different size" << std::endl;
+	std::vector<int>		comp3;
+	comp3.push_back(3);
+	comp3.push_back(434343);
+	std::vector<int>		comp4;
+	comp4.push_back(2);
+	comp4.push_back(3);
+	comp4.push_back(434343);
+	std::cout << "(comp3 == comp4) = " << std::boolalpha << (comp3 == comp4) << std::endl;
+	std::cout << "(comp3 != comp4) = " << std::boolalpha << (comp3 != comp4) << std::endl;
+
+	
+	/* use lexicographical compare */
+	std::cout << "testing < and > operators" << std::endl;
+	std::cout << "testing with vectors of different size" << std::endl;
+
+	std::vector<int>		comp5;
+	comp5.push_back(8);
+	comp5.push_back(9);
+	comp5.push_back(10);
+	std::vector<int>		comp6(comp5.begin(), comp5.end());
+	comp5.push_back(0);
+	
+	std::cout << "(comp5 < comp6) = " << std::boolalpha << (comp5 < comp6) << std::endl;
+	std::cout << "(comp5 > comp6) = " << std::boolalpha << (comp5 > comp6) << std::endl;
+	
+	std::cout << "compare two vectors of same size and with a diff of 1" << std::endl;
+	comp5.pop_back()
+	comp5.pop_back();
+	comp5.push_back(8);
+
+	std::cout << "(comp5 < comp6) = " << std::boolalpha << (comp5 < comp6) << std::endl;
+	std::cout << "(comp5 > comp6) = " << std::boolalpha << (comp5 > comp6) << std::endl;
+	
+	/* uses also lexicographical compare */
+	std::cout << "testing <= and >= operators" << std::endl;
+	std::cout << "testing with precedent vectors" << std::endl;
+	
+	// to finish
+	
+
+	separator(col);
+	std::cout << std::endl << col.bdYellow() << "End of equivalency operators tests" << col.reset() << std::endl;
+	separator(col);
+}
 
 static void	test_constructors(Colors &col) // to test
 {
@@ -852,7 +916,7 @@ static void test_pop_back(Colors &col) // to test
 => capacity
 => empty
 => reserve */
-static void	test_capacity_methods(Colors &col) // WIP
+static void	test_capacity_methods(Colors &col) // to test
 {
 	separator(col);
 	std::cout << col.bdYellow() << "Testing capacity methods..." << col.reset()
@@ -877,27 +941,83 @@ static void	test_capacity_methods(Colors &col) // WIP
 	
 	/* MAX SIZE */
 	std::cout << "Testing max_size method..." << std::endl;
-	std::cout << "test.max_size = " << test.max_size() << std::endl;
+	std::cout << "test.max_size = " << test.max_size() << std::endl << std::endl;
 
 	/* RESIZE */
-	std::cout << "Testing resize method" << std::endl;
-	
 
-	
+	std::cout << "Testing resize method" << std::endl;
+
+	/* If n is smaller than the current container size,
+	the content is reduced to its first n elements, removing those beyond (and destroying them). */
+	std::cout << "resize with n smaller to current container size" << std::endl;
+	std::cout << "removing the last element" << std::endl;
+	test.resize(4); // should remove the last element
+	std::cout << "display the updated vector" << std::endl;
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test capacity = " << test.capacity() << " and its size is equal to " << test.size() << std::endl;
+
+	/* If n is greater than the current container size, the content is expanded by inserting at the end 
+	as many elements as needed to reach a size of n. If val is specified, the new elements are initialized as copies of val,
+	otherwise, they are value-initialized. */
+	std::cout << "resize with n greater than the vector size" << std::endl;
+	std::cout << "adding an element to the vector, with value 42" << std::endl;
+	test.resize(5, "42");
+	std::cout << "display the updated vector" << std::endl;
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test capacity = " << test.capacity() << " and its size is equal to " << test.size() << std::endl;
+
+	std::cout << "adding an element to the vector but without initializing it" << std::endl;
+	test.resize(6);
+	std::cout << "display the updated vector" << std::endl;
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test capacity = " << test.capacity() << " and its size is equal to " << test.size() << std::endl;
+
+	std::cout << "resize with n == test.size()" << std::endl;
+	test.resize(6);
+	std::cout << "display the updated vector" << std::endl;
+	for (std::size_t i = 0; i < test.size(); i++)
+		std::cout << "test[" << i << "] = " << test[i] << std::endl;
+	std::cout << "test capacity = " << test.capacity() << " and its size is equal to " << test.size() << std::endl;
 
 	/* CAPACITY */
 	std::cout << "Testing capacity method..." << std::endl;
 	std::cout << "test.capacity = " << test.capacity() << std::endl;
 
 	/* insert some values to check the changes in capacity */
-	std::cout << "Checking changes in capacity related to changes in size..." << std::endl; // to improve
+	std::cout << "Checking changes in capacity related to augmentations in size..." << std::endl;
 	test.push_back("Check"); 
 	test.push_back("changes ");
 	test.push_back("in");
 	test.push_back("vector");
-	test.push_back("capcity");
+	test.push_back("capacity");
 	
 	std::cout << "test.capacity = " << test.capacity() << std::endl;
+
+	std::cout << "Checking changes in capacity related to diminutions in size..." << std::endl;
+	test.pop_back();
+	test.pop_back();
+	test.pop_back();
+	test.pop_back();
+
+	std::cout << "test.capacity = " << test.capacity() << std::endl;
+
+	/* RESERVE */
+	std::cout << "testing reserve"  << std::endl;
+	std::cout << "base test.capacity = " << std::endl;
+	std::cout << "reserving a capacity of at least 67" << std::endl;
+	test.reserve(67);
+	std::cout << "new capacity = " << test.capacity() << std::endl;
+	
+	std::cout << "reserving a capacity of 0 (should change nothing)" << std::endl;
+	test.reserve(0);
+	std::cout << "new capacity = " << test.capacity() << std::endl;
+	
+	std::cout << "reserving a capacity superior to max_size() : should throw an error" << std::endl;
+	test.reserve(test.max_size() + 1);
+	std::cout << "new capacity = " << test.capacity() << std::endl; 
 
 	separator(col);
 	std::cout << std::endl << col.bdYellow() << "capacity tests over" << col.reset() << std::endl;
@@ -996,7 +1116,7 @@ static void	test_access_elems(Colors &col) // to test
 
 
 /* all the tests to assess the viability of ft::vector */
-void	vector_verif_procedure(Colors &col)
+void	vector_verif_procedure(Colors &col) // obsolete
 {
 	std::cout << "Vector verification procedure" << std::endl;
 	separator(col);
