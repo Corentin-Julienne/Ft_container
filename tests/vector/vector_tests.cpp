@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:42:21 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/06 16:29:09 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:17:25 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -820,12 +820,6 @@ static void	test_iterator(Colors &col) // to test
 	separator(col);
 	std::cout << std::endl << col.bdYellow() << "iterator tests over" << col.reset() << std::endl;
 	separator(col);
-}
-
-/* tests all constructors and operator = */
-static void	test_constructors(Colors &col)
-{
-	// TO IMPLEMENT
 }
 
 /* pop_back test battery 
