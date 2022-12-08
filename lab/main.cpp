@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/07 13:22:01 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/08 15:01:01 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <iterator>
 #include <ctime>
 
 void	leaks_tracking(void)
@@ -27,11 +28,7 @@ int main(void)
 {
 	atexit(leaks_tracking);
 	
-	// beginning test
 	
-	std::map<int, std::string>		test;
-
-	test.insert(test.begin());
 	
 	return (0);
 }
