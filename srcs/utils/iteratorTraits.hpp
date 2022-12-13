@@ -6,11 +6,11 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 13:54:14 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/11 13:26:01 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/12 16:31:44 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ITERATORS_TRAITS_HPP
+#ifndef ITERATOR_TRAITS_HPP
 # define ITERATOR_TRAITS_HPP
 
 #include <iterator>

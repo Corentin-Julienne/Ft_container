@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/22 16:20:46 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/12 18:43:25 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 /* include other files */
 
 # include "VectorIterator.hpp"
-# include "VectorConstIterator.hpp"
 # include "../utils/reverseIterator.hpp"
 # include "../utils/compare.hpp"
 
@@ -109,7 +108,7 @@ namespace ft // called by ft::Vector
 				if (n == this->_size)
 					return ;
 				if (n > this->max_size())
-					; // handle err (check behaviour of real vector)
+					throw std::length_error(); // test this
 				if (n > this->_capacity)
 				{
 					this->_change_mem_allocated(n);
@@ -159,7 +158,7 @@ namespace ft // called by ft::Vector
 			reference	at(size_type n) // to test
 			{
 				if (n >= this->_size)
-					; // throw out of range exception TODO !!!
+					throw std::out_of_range();
 				return (this->operator[](n));
 			}
 			
@@ -168,7 +167,7 @@ namespace ft // called by ft::Vector
 			const_reference	at(size_type n) const // to test
 			{
 				if (n >= this->_size)
-					; // throw out of range exception TODO !!!
+					throw std::out_of_range();
 				return (this->operator[](n));
 			}
 			
@@ -192,49 +191,79 @@ namespace ft // called by ft::Vector
 			
 		/* METHODS RELATIVE TO VECTOR MODIFICATION */
 
+			/* assign destroy content if relevant, then push bakc one by one the range of iterators */
 			template <class InputIterator>
 			void	assign(InputIterator first, InputIterator last) // to test
 			{
+				if (this->empty() == false)
+					this->clear();	
 				for (first; first != last; first++)
 					this->push_back(*first);
 			}
 
 			void	assign(size_type n, const value_type& val) // to test
 			{
+				if (this->empty() == false)
+					this->clear();
 				for (int i = 0; i < n; i++)
 					this->push_back(val);
 			}
 
 			void	push_back(const value_type& val) // to test
 			{
+				if (this->size == this->max_size())
+					std::length_error();
 				if (this->_size == this->_capacity)
 					this->_expand_mem_allocated();
 				this->_alloc.construct(this->_ptr + this->_size + 1, val);
 			}
 
+			/* undefined behaviour if container is empty */
 			void	pop_back(void)  // to test
 			{ 
 				this->_alloc.destroy(this->_ptr + this->_size); 
 				this->_size--;
 			}
 
-			iterator	insert(iterator position, const value_type& val)
+			/* insert a single value at iterator position */
+			iterator	insert(iterator position, const value_type& val) // wip
 			{
-				if (this->_size + 1 > this->_capacity) // check if unsufficient capacity (trigger exception ?)
+				if (this->size == this->max_size)
+					throw std::length_error();
+				if (this->_size + 1 > this->_capacity)
 					this->_expand_mem_allocated();
 				if (position != this->end())
 					this->_shift_objs_in_vect(position, 1);
 			}
 
-			void	insert(iterator position, size_type n, const value_type& val)
+			/* insert n times val at iterator position */
+			void	insert(iterator position, size_type n, const value_type& val) // wip
 			{
-				// TODO
+				if (this->_size + n > this->max_size()) // case not enough space left in vector
+					throw std::length_error();
+				while (this->capacity() < (this->size() + n)) // expand by factor 2 until it has the necessary capacity
+					this->_expand_mem_allocated();
+				if (position != this->end()) // if shift needed
+					this->_shift_objs_in_vect(position, n);
 			}
-
+			
 			template <class InputIterator>
 			void	insert(iterator position, InputIterator first, InputIterator last)
 			{
-				// TODO
+				std::size_t			len = 0;;
+				InputIterator		cpy = first;
+
+				while (cpy != last)
+				{
+					len++
+					cpy++;
+				}
+				if (this->_size + len > this->max_size()) // case not enough space left in vector
+					throw std::length_error();
+				while (this->capacity() < (this->size() + len)) // expand by factor 2 until it has the necessary capacity
+					this->_expand_mem_allocated();
+				if (position != this->end()) // if shift needed
+					this->_insert_subarray(position, first, last);
 			}
 
 			iterator	erase(iterator position)
@@ -294,11 +323,11 @@ namespace ft // called by ft::Vector
 			/* resize the vector capacity. Copy the values in the new array if there is enough space.
 			Then, delete the values in the old arr, update_capacity and _size and make the pointer point
 			to the new arr after freeing the old one */
-			void	_change_mem_allocated(size_type n) // check wether the old array has been destroyed
+			void	_change_mem_allocated(size_type n) // check whether the old array has been destroyed
 			{
 				value_type		*new_arr;
 				
-				new_arr = this->_alloc.allocate(n); // allocate n contiguous blocks of mem
+				new_arr = this->_alloc.allocate(n); // allocate n contiguous blocks of memory
 				for (size_type i = 0; i < this->_size && i < n; i++) // copy obj in new array (don't do it if not enough space)
 					this->_alloc.construct(new_arr + i, this->at(i));
 				for (size_type i = 0; i < this->_size; i++)
@@ -310,7 +339,7 @@ namespace ft // called by ft::Vector
 			}
 
 			/* resize the vector capacity by a factor two (good ratio for performance) */
-			void	_expand_mem_allocated(void) 
+			void	_expand_mem_allocated(void) // to test
 			{ 
 				if (this->_capacity * 2 <= this->max_size())
 					this->_change_mem_allocated(this->_capacity * 2);
@@ -321,32 +350,53 @@ namespace ft // called by ft::Vector
 			}
 
 			/* change the position of all a sequence of objects in vector
-			(if n is positive, in the right direction, left otherwise) */
-			void	_shift_objs_in_vect(iterator pos, int n)
+			(n must be positive) */
+			void	_shift_objs_in_vect(iterator pos, std::size_t n) // wip
 			{
-				ft::vectorIterator<value_type>		it;
 				ft::vector<value_type>				tmp;
+				ft::vectorIterator<value_type>		it = this->begin();
+				std::size_t							len = 0;
 
-				// copy the arr int a tmp vect
+				// copy the arr int a tmp vector
 				for (size_type i = 0; i < this->_size; i++)
 					tmp.push_back(this->at(i));
-				// iterate through the arr 				
+				// iterate through the arr
 				it = this->begin();
-				while (it != pos)
-					it++;
-				// destroying value to create a "hole" in the array
-				while (it != (pos + n))
+				while (it != pos) // calc the len of first part of the arr
 				{
-					this->_alloc.destroy(it->()); // functionnal ?
 					it++;
+					len++;
 				}
-				tmp.clear(); // useful ?
+				for (std::size_t = len; len < this->size(); len++) // shift the vector values by n
+				{
+					this->_alloc.destroy(this->_ptr + len);
+					this->_alloc.construct(this->_ptr + len + n, tmp[len]);
+				}
 			}
 
-			void	_fulfill_hole_in_vect() // useful ? 
-			{
+			// template <class InputIterator>
+			// void	_insert_subarray(iterator pos, InputIterator first, InputIterator last)
+			// {
+			// 	ft::vector<value_type>				new_arr;
+			// 	ft::vector<value_type>				third_part;
+
+			// 	new_arr.assign(this->begin(), pos); // assign to new_arr every data before pos
 				
-			}
+				
+			// 	this->swap(new_arr); // replace old arr by new arr
+			// }
+
+			// /* joins the vector and another one 
+			// !!! does not check for capacity !!!*/
+			// void	_vector_join(ft::vector<value_type> )
+			// {
+					
+			// }
+
+			// void	_fulfill_hole_in_vect() // useful ? 
+			// {
+				
+			// }
 	};
 	
 	/* OUT OF THE CLASS OVERLOADS FOR OPERATORS */

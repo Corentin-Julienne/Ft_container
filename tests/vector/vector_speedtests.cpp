@@ -6,62 +6,204 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:35:05 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/06 17:34:08 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/12 16:28:41 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/test_includes.hpp"
+#include <time.h>
 
-/* includes some speedtests for basic operations in vector */ // complete
+/* includes some speedtests for basic operations in vector 
+It would be better to use std::chrono but it is C++11 (so forbidden by the subject, unfortunately) 
+use : the C style clock in the header <time.h> */
 
-/* check wether the execution is fast enough (ft can be as 20 times slowe than its stl equivalent) */
-bool	is_fast_enough(void)
+/* print the result of the test */
+static void	speedtest_result(Colors &col, std::string feature, double duration)
 {
-	// TO IMPLEMENT
+	std::cout << col.bdYellow() << "The time necessary for the " << feature << " feature is " 
+	<< duration << col.end() << std::endl;
 }
 
-/* is simple function that displays if ft speed is enough (subject requires ft::vector to be 
-at worst 20x times slower than std::vector)  */
-void	speedtest_result(Colors &col)
+/* helps calc where to suppress when in the middle */
+static std::size_t	calc_middle(std::size_t	size)
 {
-	if (is_fast_enough())
-		std::cout << col.bdGreen() << "Ft feature is fast enough" << col.reset() << std::endl;
+	if (size == 1)
+		return 0;
 	else
-		std::cout << col.bdRed() << "Ft is too slow !!!" << col.reset() << std::endl;
+		return (size / 2);
 }
 
-/* vector speedtest compares a large number of operations (using vector methods).
-will compare 10.000 times speed op with the same seed with those ops for 100 times : 
-=> push_back() * 10.000
-=> pop_back() * 10.000
-=> insert() * 10.000
-=> assign() * 10.000
+/* vector speedtest compares a large number of operations (using vector methods). 
+check especifically the methods of vector modification :
+=> push_back
+=> pop_back
+=> insert
+=> erase
+=> assign
+=> clear
+=> resize
+=> reserve
 */
-void	vector_speedtest(Colors &col)
+static void	vector_speedtest(Colors &col)
 {
-	std::cout << col.bdYellow() << "Starting speedtest for vectors" << col.reset() << std::endl;
+	std::cout << col.bdYellow() << "Starting speedtest for vectors..." << col.reset() << std::endl;
 	
-	std::vector<int>	stl_int;
-	ft::vector<int>		ft_int;
-
-	std::time_t			stl_timer = std::time(nullptr); // timer for stl
-	std::time_t			ft_timer = std::time(nullptr); // timer for ft
-	std::time_t			stl_start = std::time(nullptr); // start timer for stl
-	std::time_t			ft_start = std::time(nullptr);	// start timer for ft
-
-
+	std::vector<int>	stl_int; // inititate an empty int vector
+	clock_t		t;	// init clock
+	double		exec_time;
+	
 	/* SPEEDTEST FOR PUSH_BACK */
-
+	std::cout << "testing push back method with 10.000.000 values..." << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < 10000000; i++) 
+		stl_int.push_back(i);
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "push_back", exec_time);
+	separator(col);
+	
 	/* SPEEDTEST FOR POP_BACK */
+	std::cout << "testing pop_back, suppressing the 10.000.000 values previously inserted..." << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < 10000000; i++)
+		stl_int.pop_back();
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "pop_back", exec_time);
+	separator(col);
+	
+	/* SPEEDTEST FOR INSERT */
+	stl_int.push_back(666);
+	std::cout << "testing the two versions of insert method with multiple values" << std::endl;
+
+	/* void insert (iterator position, size_type n, const value_type& val) */
+	std::cout << "testing with void insert (iterator position, size_type n, const value_type& val)" << std::endl;
+	t = clock();
+	stl_int.insert(stl_int.begin(), 10000000, 42);
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "void insert (iterator position, size_type n, const value_type& val)", exec_time);
+	separator(col);
+
+	/* testing with void insert (iterator position, InputIterator first, InputIterator last) */  
+	std::cout << "testing with void insert (iterator position, InputIterator first, InputIterator last);" << std::endl;
+	std::vector<int> 	other_vect(stl_int);
+	t = clock();
+	stl_int.insert(stl_int.end(), other_vect.begin(), other_vect.end()); // verify
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "void insert (iterator position, InputIterator first, InputIterator last)", exec_time);
+	separator(col);
+	
+	/* SPEEDTEST FOR CLEAR */
+	std::cout << "testing with clear..." << std::endl;
+	t = clock();
+	stl_int.clear();
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "clear", exec_time);
+	separator(col);
+
+	/* SPEEDTEST FOR ERASE */
+	std::cout << "testing with the two versions of erase..." << std::endl;
+
+	for (std::size_t i = 0; i < 10000000; i++) // add value to the now empty vector
+		stl_int.push_back(i);
+
+	/* iterator erase (iterator position) */
+	std::cout << "testing iterator erase (iterator position), deleting values at the beginning" << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < stl_int.size(); i++)
+		stl_int.erase(stl_int.begin());
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "erase (iterator position), deleting vals at the beg", exec_time);
+	separator(col);
+
+	for (std::size_t i = 0; i < 10000000; i++) // add value to the now empty vector
+		stl_int.push_back(i);
+	std::cout << "testing iterator erase (iterator position), deleting values at the end" << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < stl_int.size(); i++)
+		stl_int.erase(stl_int.end() - 1); // verify that
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "erase (iterator position), deleting vals at the end", exec_time);
+	separator(col);
+
+	for (std::size_t i = 0; i < 10000000; i++) // add value to the now empty vector
+		stl_int.push_back(i);
+	std::cout << "testing iterator erase (iterator position), deleting values at the middle" << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < stl_int.size(); i++)
+		stl_int.erase(stl_int.begin() + (calc_middle(stl_int.size()))); // verify that
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "erase (iterator position), deleting vals at the middle", exec_time);
+	separator(col);
+
+	/* iterator erase (iterator first, iterator last) */
+	for (std::size_t i = 0; i < 10000000; i++) // add value to the now empty vector
+		stl_int.push_back(i);
+	std::cout << "testing ...iterator erase (iterator first, iterator last)" << std::endl;
+	t = clock();
+	stl_int.erase(stl_int.begin(), stl_int.end()); // to test
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "erase (iterator first, iterator last)", exec_time);
+	separator(col);
 
 	/* SPEEDTEST FOR ASSIGN */
 
-	// speedtest for assign();
-
+	for (std::size_t i = 0; i < 10000000; i++) // add value to the now empty vector
+		stl_int.push_back(i);
+	std::vector<int>			other_vect2;
+	for (std::size_t i = 0; i < 10000000; i++)
+		other_vect2.push_back(i);
+	/* void assign (InputIterator first, InputIterator last); */
+	std::cout << "assign 10.000.000 times other_vect_2 to test vector" << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < 10000000; i++)
+		stl_int.assign(other_vect2.begin(), other_vect2.end() - 1);
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "assign (InputIterator first, InputIterator last)", exec_time);
+	separator(col);
 	
+	/* void assign (size_type n, const value_type& val); */
+	std::cout << "assign 10.000.000 times 5 values (666)" << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < 10000000; i++)
+		stl_int.assign(5, 666);
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "assign (size_type n, const value_type& val)", exec_time);
+	separator(col);
 
-	// speedtest for assign();
+	/* SPEEDTEST FOR RESERVE */
+	/* void reserve (size_type n); */
+	std::cout << "reserve 10.000.000 times memory" << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < 10000000; i++)
+		stl_int.reserve(666 + i);
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "reserve", exec_time);
+	separator(col);
 	
+	/* SPEEDTEST FOR RESIZE */
+	/* void resize (size_type n, value_type val = value_type()); */
+	std::cout << "resize 10.000.000 times" << std::endl;
+	t = clock();
+	for (std::size_t i = 0; i < 10000000; i++)
+		stl_int.resize(666 + i, 42);
+	t = clock() - t;
+	exec_time = ((double)t)/CLOCKS_PER_SEC;
+	speedtest_result(col, "resize", exec_time);
+	separator(col);
 
+	// ---------------------------------------------------------------------------------------- //
 	std::cout << col.bdYellow() << "End of speedtests for vectors" << col.reset() << std::endl;
+	std::cout << col.bdYellow() << "Please do not forget to compare the results with" 
+	<< " either ft or stl vector" << col.reset() << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 18:15:58 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/14 10:05:18 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/12 16:32:20 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ namespace ft
 				return	tmp;
 			}
 
-			VectorIterator&	operator+=(difference_type diff) { _ptr += diff; return *this; };
-			VectorIterator&	operator-=(difference_type diff) { _ptr -= diff; return *this; };
+			vectorIterator&	operator+=(difference_type diff) { _ptr += diff; return *this; };
+			vectorIterator&	operator-=(difference_type diff) { _ptr -= diff; return *this; };
 
 			/* EQUIVALENCY OPERATORS */
 			bool	operator==(vectorIterator const &other) const { return _ptr == other._ptr; };
