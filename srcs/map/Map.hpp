@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:40:57 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/29 15:55:32 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/13 19:03:36 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <functional>
 
 # include "../utils/pair.hpp"
-# include "./MapIterator.hpp"
+# include "./mapIterator.hpp"
 # include "../utils/reverseIterator.hpp"
 # include "./redBlackTree.hpp"
 
@@ -52,8 +52,8 @@ namespace ft
 			typedef typename std::size_t 					size_type;
 			typedef typename std::ptrdiff_t 				difference_type;
 			// iterators to put there
-			typedef ft::MapIterator<Key, T>					iterator;
-			typedef ft::MapIterator<Key, T, true>			const_iterator;
+			typedef ft::mapIterator<Key, T>					iterator;
+			typedef ft::mapIterator<Key, T, true>			const_iterator;
 			typedef ft::reverseIterator<iterator> 			reverse_iterator;
 			typedef ft::reverseIterator<const_iterator> 	const_reverse_iterator;
 			// tree
@@ -87,28 +87,36 @@ namespace ft
 
 			/* default constructor, create empty map */
 			explicit	map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-			_alloc(alloc), _comparator(comp), _tree(nullptr) {}
+			 _tree(nullptr), _size(0) , _alloc(alloc), _comparator(comp) {} // to test
 
 			/* range constructor */
 			template <class InputIterator>
 			map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), 
-					const allocator_type& alloc = allocator_type())
+					const allocator_type& alloc = allocator_type()) : _tree(nullptr), _size(0),
+					_alloc(alloc), _comparator(comp)  // to test
 			{
-				// TODO
+				this->insert(first, last);
 			}
 
 			/* copy constructor */
-			map(const map& x) : _tree(x._tree), _alloc(x._alloc), _comparator(x._comparator) {};
+			map(const map& x) : _tree(x._tree), _size(0), _alloc(x._alloc), _comparator(x._comparator) {}; // to test
 
 			/* destructor */
-			virtual	~map() {}
+			virtual	~map() // to test
+			{
+				if (this->size() >= 2)
+					this->erase(this->begin(), this->end());
+				else if (this->size() == 1)
+					this->erase(this->begin());
+			}
 
 			/* overloading operator = */
-			map&	operator=(const map& x)
+			map&	operator=(const map& x) // to test
 			{
 				if (this != &x)
 				{
 					this->_tree = x._tree;
+					this->_size = x._size;
 					this->_comparator = x._comparator;
 					this->_alloc = x._alloc;
 				}
@@ -119,56 +127,56 @@ namespace ft
 		
 			iterator	begin(void) // to test
 			{
-				iterator	target(this->_tree->getMin()); // minimum
+				iterator	target(this->_tree->getMin());
 
 				return (target);	
 			}
 
 			iterator	end(void) // to test
 			{
-				iterator	target(this->_tree->getMax()); // maximum
+				iterator	target(this->_tree->getMax());
 
 				return (target);
 			}
 
-			const_iterator	begin(void) // to test
+			const_iterator	cbegin(void) // to test
 			{
-				const_iterator		target(this->_tree->getMin()); // minimum
+				const_iterator		target(this->_tree->getMin());
 
 				return (target);	
 			}
 
-			const_iterator	end(void) // to test
+			const_iterator	cend(void) // to test
 			{
-				const_iterator		target(this->_tree->getMax()); // maximum
+				const_iterator		target(this->_tree->getMax());
 
 				return (target);
 			}
 
-			reverse_iterator	begin(void) // to test
+			reverse_iterator	rbegin(void) // to test
 			{
-				reverse_iterator	target(this->_tree->getMin()); // minimum
+				reverse_iterator	target(this->_tree->getMin());
 
 				return (target);	
 			}
 
-			reverse_iterator	end(void) // to test
+			reverse_iterator	rend(void) // to test
 			{
-				reverse_iterator	target(this->_tree->getMax()); // maximum
+				reverse_iterator	target(this->_tree->getMax());
 
 				return (target);
 			}
 
-			const_reverse_iterator	begin(void) // to test
+			const_reverse_iterator	crbegin(void) // to test
 			{
-				const_reverse_iterator		target(this->_tree->getMin()); // minimum
+				const_reverse_iterator		target(this->_tree->getMin());
 
 				return (target);
 			}
 
-			const_reverse_iterator	end(void) // to test
+			const_reverse_iterator	crend(void) // to test
 			{
-				const_reverse_iterator		target(this->_tree->getMax()); // maximum
+				const_reverse_iterator		target(this->_tree->getMax());
 
 				return (target);
 			}
@@ -194,34 +202,32 @@ namespace ft
 
 			/* operator[] returns the value of a given key if it exists. Otherwise,
 			it creates it and returns it */
-			mapped_type&	operator[](const key_type& k)
+			mapped_type&	operator[](const key_type& k) // to test
 			{
 				mapped_type		target = this->_tree.getValOfKey(k);
 
 				if (target == nullptr)
 					this->_tree->BinarySearchTreeInsertion(); // change this to RBT
-				return (target);		
-			}
-		
-			mapped_type&	at(const key_type& k)
-			{
-				mapped_type				target = this->_tree.getValOfKey(k);
-
-				if (target == nullptr)
-				{
-					
-				}
 				return (target);
 			}
-			
-			const mapped_type&	at(const key_type& k) const
+		
+			/* returns the value of key if exists, otherwise throw out-of-range exception */
+			mapped_type&	at(const key_type& k) // to test
+			{
+				mapped_type		target = this->_tree.getValOfKey(k);
+
+				if (target == nullptr)
+					throw std::out_of_range();
+				return (target);
+			}
+
+			/* returns the value of key if exists, otherwise throw out-of-range exception */			
+			const mapped_type&	at(const key_type& k) const // to test
 			{
 				const mapped_type		target = this->_tree.getValOfKey(k);
 
 				if (target == nullptr)
-				{
-					
-				}
+					throw std::out_of_range();
 				return (target);
 			}
 
@@ -269,9 +275,12 @@ namespace ft
 			}
 
 			/* erase a range of size_type iterators */
-			size_type	erase(const key_type& k) // dunno what this is
+			size_type	erase(const key_type& k) // to test
 			{
-				
+				if (this->find(k) == this->end())
+					return (0);
+				this->erase(this->find(k));
+				return (1);
 			}
 
 			/* erase a range of iterators */
@@ -285,8 +294,8 @@ namespace ft
 			}
 
 			/* swap all the private attributes of two maps (this and x) */
-			void	swap(map& x)
-			{
+			void	swap(map& x) // to test
+			{	
 				binary_tree					tmp_tree = x._tree;
 				allocator_type				tmp_alloc = x._alloc;
 				key_compare					tmp_comparator = x._comparator;
@@ -306,13 +315,144 @@ namespace ft
 				this->_tree->postOrderTraversalDeletion(this->_tree->getRoot());
 			}
 
+		/* OBSERVERS */
+
+			key_compare	key_comp() const
+			{
+				// TO IMPLEMENT
+			}
+
+			value_compare	value_comp() const
+			{
+				// TO IMPLEMENT
+			}
+
 		/* METHODS USED FOR OPERATIONS */
 
+			/* Searches the container for an element with a key equivalent to k
+			and returns an iterator to it if found, otherwise it returns an iterator to map::end. */
+			iterator	find(const key_type& k) // to test
+			{
+				iterator		res = this->begin();
+				
+				while (res != this->end())
+				{
+					if ((*res).first == k)
+						break ;
+					res++;
+				}
+				return (res);
+			}
+
+			/* Searches the container for an element with a key equivalent to k
+			and returns an iterator to it if found, otherwise it returns an iterator to map::end. */
+			const_iterator	find(const key_type& k) const // to test
+			{
+				iterator		res = this->begin();
+				
+				while (res != this->end())
+				{
+					if ((*res).first == k)
+						break ;
+					res++;
+				}
+				
+				const_iterator	const_res(res); // check this
+				
+				return (const_res);
+			}
+
+			/* Searches the container for elements with a key equivalent to k and returns the number of matches.
+			There is no duplicte keys in map, so result is either 0 or 1 */
+			size_type	count(const key_type& k) const // to test
+			{
+				if (this->find(k) == this->end())
+					return (0);
+				return (1);
+			}
+
+			/* return either the key if existing or the first elem that is not less than key k */
+			iterator	lower_bound(const key_type& k) // to test
+			{
+				iterator		it = this->begin();
+
+				while (it != this->end())
+				{
+					if (key_comp((*it).first, k) == false)
+						break ;
+					it++;
+				}
+				return (it);
+			}
+
+			const_iterator	lower_bound(const key_type& k) const // to test
+			{
+				iterator		it = this->begin();
+
+				while (it != this->end())
+				{
+					if (key_comp((*it).first, k) == false)
+						break ;
+					it++;
+				}
+				
+				const_iterator	it_const(it);
+
+				return (it_const);				
+			}
+
+			/* return either the next if key exists or the element after the first elem that is not less than key k */
+			iterator	upper_bound(const key_type& k) // to test
+			{
+				iterator		it = this->begin();
+
+				while (it != this->end())
+				{
+					if (key_comp((*it).first, k) == false)
+						break ;
+					it++;
+				}
+				it++;
+				return (it);
+			}
+
+			const_iterator	upper_bound(const key_type& k) const // to test
+			{
+				iterator		it = this->begin();
+
+				while (it != this->end())
+				{
+					if (key_comp((*it).first, k) == false)
+						break ;
+					it++;
+				}
+				it++;
+				
+				const_iterator	it_const(it);
+
+				return (it_const);	
+			}
 			
+			/* returns a pair with first elem equal to lower_bound and second second elem equal to upper_bound */
+			pair<iterator,iterator>	equal_range(const key_type& k) // to test
+			{
+				iterator		lower = this->lower_bound(k);
+				iterator		upper = this->upper_bound(k);
+
+				return (ft::make_pair<iterator, iterator>(lower, upper));
+			}
+
+			pair<const_iterator,const_iterator>	equal_range(const key_type& k) const // to test
+			{
+				const_iterator		lower = this->lower_bound(k);
+				const_iterator		upper = this->upper_bound(k);
+
+				return (ft::make_pair<const_iterator, const_iterator>(lower, upper));
+			}
 		
 		/* METHOD FOR GETTING ALLOCATORS */
 		
-			allocator_type	get_allocator(void) const
+			allocator_type	get_allocator(void) const // to test
 			{
 				return (this->_alloc);
 			}
@@ -320,51 +460,52 @@ namespace ft
 		private:
 
 			binary_tree			*_tree;
+			size_type			_size;
 			allocator_type		_alloc;
 			key_compare			_comparator;
 	};
 	
 	template <class Key, class T, class Compare, class Alloc>
-	bool	operator==(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs)
+	bool	operator==(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) // to test
 	{
-		// TODO
+		if (lhs.size() != rhs.size())
+			return (false);
+		else
+			return (equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	bool	operator!=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs)
+	bool	operator!=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) // to test
 	{
-		// TODO
+		return (!lhs == rhs);
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	bool	operator<(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs)
+	bool	operator<(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) // to test
 	{
-		// TODO
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); // ?
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	bool	operator<=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs)
+	bool	operator<=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) // to test
 	{
-		// TODO
+		return (!(rhs < lhs));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	bool	operator>(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs)
+	bool	operator>(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) // to test
 	{
-		// TODO
+		return (rhs < lhs);
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	bool	operator>=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs)
+	bool	operator>=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) // to test
 	{
-		// TODO
+		return (!(lhs < rhs));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	void	swap(map<Key, T, Compare, Alloc>& lhs, map<Key, T, Compare, Alloc>& rhs)
-	{
-		// TODO
-	}
+	void	swap(map<Key, T, Compare, Alloc>& lhs, map<Key, T, Compare, Alloc>& rhs) { x.swap(y); }; // to test
 }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 18:15:58 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/12 16:32:20 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/13 12:37:25 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,26 @@
 # define VECTOR_ITERATOR_HPP
 
 # include "../utils/iteratorTraits.hpp"
+# include "../utils/enableConst.hpp"
 
 namespace ft
 {
-	template <typename T>
+	template <typename T, bool IsConst = false>
 	class vectorIterator
 	{
 		public:
 		
 			/* ALIASES */
-			typedef T														 		iterator_type; // the type of vector
-			typedef typename iterator_traits<iterator_type>::iterator_category 		iterator_category;
-			typedef typename iterator_traits<iterator_type>::value_type        		value_type;
-			typedef typename iterator_traits<iterator_type>::difference_type   		difference_type;
-			typedef typename iterator_traits<iterator_type>::pointer           		pointer;
-			typedef typename iterator_traits<iterator_type>::reference         		reference;
+			
+			/* type of iterator */
+			typedef std::bidirectional_iterator_tag  											iterator_category;
+			/* various data */
+			typedef T														 					value_type;
+			typedef std::size_t 																size_type;
+			typedef std::ptrdiff_t 																difference_type;
+			/* discriminate between const and non const iterators */
+			typedef typename ft::enable_const<IsConst, *value_type, const *value_type>::type	pointer;
+			typedef typename ft::enable_const<IsConst, &value_type, const &value_type>::type	reference;
 			
 			/* CONSTRUCTOR, DESTRUCTOR, COPY CONSTRUCTOR, OVERLOAD OPERATOR = */
 			vectorIterator(void) : _ptr(nullptr) {}; // useful ?
@@ -45,11 +50,11 @@ namespace ft
 			}
 
 			/* ARITHMETICS OPERATORS */
-			vectorIterator		operator+(difference_type diff) { return (vectorIterator(_ptr + diff)); };
-			vectorIterator		operator-(difference_type diff) { return (vectorIterator(_ptr - diff)); };
 
-			difference_type		operator+(vectorIterator other) { return _ptr + other._ptr; };
-			difference_type		operator-(vectorIterator other) { return _ptr - other._ptr; };
+			vectorIterator		operator+(difference_type diff) { return (vectorIterator(_ptr + diff)); }; 	// a + n
+			vectorIterator		operator-(difference_type diff) { return (vectorIterator(_ptr - diff)); }; 	// a - n
+			difference_type		operator-(vectorIterator other) { return _ptr - other._ptr; }; 				// a - b
+			// check for *(1 + it) and *(1 - it)
 
 			/* INCREMENTATION OPERATORS */
 			vectorIterator&	operator++() { _ptr++; return *this; };

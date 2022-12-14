@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/12 18:43:25 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/13 16:19:17 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ namespace ft // called by ft::Vector
 			typedef typename std::ptrdiff_t 							difference_type;
 			/* aliases for iterators */
 			typedef typename ft::vectorIterator<T>						iterator;
-			typedef typename ft::vectorConstIterator<T>					const_iterator;
+			typedef typename ft::vectorIterator<T, true>				const_iterator;
 			typedef typename ft::reverseIterator<iterator>				reverse_iterator;
 			typedef typename ft::reverseIterator<const_iterator>		const_reverse_iterator;
 
@@ -226,7 +226,7 @@ namespace ft // called by ft::Vector
 			}
 
 			/* insert a single value at iterator position */
-			iterator	insert(iterator position, const value_type& val) // wip
+			iterator	insert(iterator position, const value_type& val) // to test
 			{
 				if (this->size == this->max_size)
 					throw std::length_error();
@@ -234,52 +234,72 @@ namespace ft // called by ft::Vector
 					this->_expand_mem_allocated();
 				if (position != this->end())
 					this->_shift_objs_in_vect(position, 1);
+				this->_alloc.construct(this->_ptr + (position - this->_begin()), val);
+				this->_size++;
 			}
 
 			/* insert n times val at iterator position */
-			void	insert(iterator position, size_type n, const value_type& val) // wip
+			void	insert(iterator position, size_type n, const value_type& val) // to test
 			{
-				if (this->_size + n > this->max_size()) // case not enough space left in vector
+				if (this->_size + n > this->max_size())
 					throw std::length_error();
-				while (this->capacity() < (this->size() + n)) // expand by factor 2 until it has the necessary capacity
+				while (this->capacity() < (this->size() + n))
 					this->_expand_mem_allocated();
-				if (position != this->end()) // if shift needed
+				if (position != this->end())
 					this->_shift_objs_in_vect(position, n);
+				for (std::size_t i = 0; i < n; i++)
+					this->_alloc.construct(this->_ptr + (position - this->begin()) + i, val);
+				this->_size += n;
 			}
 			
+			/* insert a the range fist/last at iterator position */
 			template <class InputIterator>
-			void	insert(iterator position, InputIterator first, InputIterator last)
+			void	insert(iterator position, InputIterator first, InputIterator last) // to test
 			{
-				std::size_t			len = 0;;
-				InputIterator		cpy = first;
-
-				while (cpy != last)
-				{
-					len++
-					cpy++;
-				}
-				if (this->_size + len > this->max_size()) // case not enough space left in vector
+				std::size_t			dist = last - first;
+				
+				if (this->_size + dist > this->max_size())
 					throw std::length_error();
-				while (this->capacity() < (this->size() + len)) // expand by factor 2 until it has the necessary capacity
+				while (this->capacity() < (this->size() + dist))
 					this->_expand_mem_allocated();
-				if (position != this->end()) // if shift needed
-					this->_insert_subarray(position, first, last);
+				if (position != this->end())
+					this->_shift_objs_in_vect(position, dist);
+				this->_insert_subarray(position, first, last);
+				this->_size += dist;
 			}
 
-			iterator	erase(iterator position)
+			/* erase a single value a iterator position */
+			iterator	erase(iterator position) // to test
 			{
-				// TODO
+				this->_supress_subarray(position, 1);
+				this->_shift_objs_in_vect(position, - 1);
+				this->_size--;
 			}
 			
-			iterator	erase(iterator first, iterator last)
+			/* erase a range of values first/last */
+			iterator	erase(iterator first, iterator last) // to test
 			{
-				// TODO
+				std::size_t								dist = last - first;
+				
+				this->_supress_subarray(first, dist);
+				if (last != this->end())
+					this->_shift_objs_in_vect(first, dist * (-1));
+				this->_size -= dist;
 			}
 
-			void	swap(vector& x)
+			void	swap(vector& x) // to test
 			{
 				ft::vector<value_type>		tmp = *this;
+
+				x._alloc = this->_alloc;
+				x._capacity = this->_capacity;
+				x._size = this->_size;
+				x._ptr = this->_ptr;
 		
+				this->_alloc = tmp._alloc;
+				this->_capacity = tmp._capacity;
+				this->_size = tmp._size;
+				this->_ptr = tmp._ptr;
 			}
 
 			void	clear(void) // to test
@@ -297,19 +317,19 @@ namespace ft // called by ft::Vector
 
 			iterator begin(void) { return iterator(this->_ptr); }; // to test
 			
-			const_iterator begin(void) const { return const_iterator(this->_ptr); }; // to test
+			const_iterator cbegin(void) const { return const_iterator(this->_ptr); }; // to test
 
 			iterator end(void) { return iterator(this->_ptr + this->_size); }; // to test
 			
-			const_iterator end(void) const { return const_iterator(this->_ptr + this->_size); }; // to test
+			const_iterator cend(void) const { return const_iterator(this->_ptr + this->_size); }; // to test
 
 			reverse_iterator rbegin(void) { return reverse_iterator(this->_ptr); }; // to test
 			
 			const_reverse_iterator rbegin(void) const { return const_reverse_iterator(this->_ptr); }; // to test
 
-			reverse_iterator rend(void) { return reverse_iterator(this->_ptn + this->_size); }; // to test
+			reverse_iterator crend(void) { return reverse_iterator(this->_ptn + this->_size); }; // to test
 			
-			const_reverse_iterator rend(void) const { return const_reverse_iterator(this->_ptn + this->_size); }; // to test
+			const_reverse_iterator crend(void) const { return const_reverse_iterator(this->_ptn + this->_size); }; // to test
 
 		private: // private member data
 
@@ -349,9 +369,9 @@ namespace ft // called by ft::Vector
 					this->_change_mem_allocated(this->max_size());
 			}
 
-			/* change the position of all a sequence of objects in vector
-			(n must be positive) */
-			void	_shift_objs_in_vect(iterator pos, std::size_t n) // wip
+			/* change the position of all a sequence of objects in vector 
+			shifts to the right if n positive, left otherwise */
+			void	_shift_objs_in_vect(iterator pos, int n) // to test
 			{
 				ft::vector<value_type>				tmp;
 				ft::vectorIterator<value_type>		it = this->begin();
@@ -360,13 +380,7 @@ namespace ft // called by ft::Vector
 				// copy the arr int a tmp vector
 				for (size_type i = 0; i < this->_size; i++)
 					tmp.push_back(this->at(i));
-				// iterate through the arr
-				it = this->begin();
-				while (it != pos) // calc the len of first part of the arr
-				{
-					it++;
-					len++;
-				}
+				len = pos - it; // test this
 				for (std::size_t = len; len < this->size(); len++) // shift the vector values by n
 				{
 					this->_alloc.destroy(this->_ptr + len);
@@ -374,29 +388,27 @@ namespace ft // called by ft::Vector
 				}
 			}
 
-			// template <class InputIterator>
-			// void	_insert_subarray(iterator pos, InputIterator first, InputIterator last)
-			// {
-			// 	ft::vector<value_type>				new_arr;
-			// 	ft::vector<value_type>				third_part;
-
-			// 	new_arr.assign(this->begin(), pos); // assign to new_arr every data before pos
+			/* insert a subarray first, last at iterator pos (space need to be free before using this method) */
+			template <class InputIterator>
+			void	_insert_subarray(iterator pos, InputIterator first, InputIterator last) // to test
+			{
+				std::size_t		dist = pos - this->begin();
 				
-				
-			// 	this->swap(new_arr); // replace old arr by new arr
-			// }
+				for (std::size_t i = 0; i < ; i++)
+				{
+					this->_alloc.construct(this->_ptr + dist + i, *first);
+					first++;
+					if (first == last)
+						break ;
+				}	
+			}
 
-			// /* joins the vector and another one 
-			// !!! does not check for capacity !!!*/
-			// void	_vector_join(ft::vector<value_type> )
-			// {
-					
-			// }
-
-			// void	_fulfill_hole_in_vect() // useful ? 
-			// {
-				
-			// }
+			/* destroy a subarray pos/n, freeing its content */
+			void	_supress_subarray(iterator pos, std::size_t n) // to test
+			{
+				for (std::size_t i = 0; i < n; i++)
+					this->_alloc.destroy(this->_ptr + (pos - this->begin()) + i);
+			}
 	};
 	
 	/* OUT OF THE CLASS OVERLOADS FOR OPERATORS */
@@ -419,7 +431,7 @@ namespace ft // called by ft::Vector
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); // ?
 	}
 
 	template <class T, class Alloc>

@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/12 17:16:47 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/13 17:57:39 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <iterator>
 #include <ctime>
 #include <time.h>
-
+#include <string>
 
 static void	leaks_tracking(void)
 {
@@ -30,7 +30,11 @@ int main(void)
 {	
 	atexit(leaks_tracking);
 
-	std::vector<int>		test;
-	std::cout << test.max_size() << std::endl;
+	std::map<int, std::string>		test;
+	std::map<int, std::string>::iterator		it = test.begin();
+	std::map<int, std::string>::iterator		it2 = test.end();
+
+	if (it == it2)
+		std::cout << "equal to end()" << std::endl;
 	return 0;
 }

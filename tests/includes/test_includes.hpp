@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:46:01 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/01 17:26:37 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/13 18:06:09 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include "../../srcs/vector/Vector.hpp"
 #include "../../srcs/vector/VectorIterator.hpp"
 #include "../../srcs/map/Map.hpp"
-#include "../../srcs/map/MapIterator.hpp"
+#include "../../srcs/map/mapIterator.hpp"
 #include "../../srcs/map/redBlackTree.hpp"
 
 /* include from test utils */
