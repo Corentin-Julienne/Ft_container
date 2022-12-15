@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 18:15:58 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/13 12:37:25 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/15 11:55:29 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "../utils/iteratorTraits.hpp"
 # include "../utils/enableConst.hpp"
+
+#include <iterator>
 
 namespace ft
 {
@@ -32,8 +34,8 @@ namespace ft
 			typedef std::size_t 																size_type;
 			typedef std::ptrdiff_t 																difference_type;
 			/* discriminate between const and non const iterators */
-			typedef typename ft::enable_const<IsConst, *value_type, const *value_type>::type	pointer;
-			typedef typename ft::enable_const<IsConst, &value_type, const &value_type>::type	reference;
+			typedef typename ft::enable_const<IsConst, value_type*, const value_type*>::type	pointer;
+			typedef typename ft::enable_const<IsConst, value_type&, const value_type&>::type	reference;
 			
 			/* CONSTRUCTOR, DESTRUCTOR, COPY CONSTRUCTOR, OVERLOAD OPERATOR = */
 			vectorIterator(void) : _ptr(nullptr) {}; // useful ?
@@ -95,7 +97,7 @@ namespace ft
 		
 		private:
 
-			pointer		_ptr;
+			pointer		_ptr; // ?????
 			
 	};
 }

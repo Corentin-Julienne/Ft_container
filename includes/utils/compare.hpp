@@ -1,17 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Compare.hpp                                        :+:      :+:    :+:   */
+/*   compare.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:46:31 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/11 10:27:39 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/14 12:31:28 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMPARE_HPP
 # define COMPARE_HPP
+
+#include "../test_includes.hpp"
 
 /* contains lexicographical_compare and equal, two template functions used to assess 
 equivalence of two ranges of iterators */

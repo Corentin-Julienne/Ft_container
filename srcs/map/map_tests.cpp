@@ -6,11 +6,11 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:45:02 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/08 15:41:25 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/15 17:18:44 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/test_includes.hpp"
+#include "../../includes/test_includes.hpp"
 
 /* this file include all the map tests. Performance are not tested there but rather
 in map_speedtest. Test covers (in that order): 
@@ -64,8 +64,7 @@ VII)	Operations
 void	test_constructors(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing constructors..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing constructors..." << col.reset() << std::endl;
 	separator(col);
 
 	/* explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()); */
@@ -168,8 +167,7 @@ void	test_constructors(Colors &col) // to test
 void	test_iterator(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing iterators method..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing iterators method..." << col.reset() << std::endl;
 	separator(col);
 
 	std::map<int, std::string>		test;
@@ -258,8 +256,7 @@ void	test_iterator(Colors &col) // to test
 void	test_reverse_iterator(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing reverse_iterators method..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing reverse_iterators method..." << col.reset() << std::endl;
 	separator(col);
 
 	std::map<int, std::string>		test;
@@ -350,8 +347,7 @@ void	test_reverse_iterator(Colors &col) // to test
 void	test_capacity(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing capacity methods..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing capacity methods..." << col.reset() << std::endl;
 	separator(col);
 
 	std::map<int, std::string>		test;
@@ -384,8 +380,7 @@ void	test_capacity(Colors &col) // to test
 void	test_access(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing access methods..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing access methods..." << col.reset() << std::endl;
 	separator(col);
 
 	std::map<int, std::string>		test;
@@ -436,8 +431,7 @@ void	test_access(Colors &col) // to test
 void	test_insert(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing insert method..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing insert method..." << col.reset() << std::endl;
 	separator(col);
 
 	std::map<int, std::string>		test;
@@ -521,8 +515,7 @@ void	test_insert(Colors &col) // to test
 void	test_erase(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing erase method..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing erase method..." << col.reset() << std::endl;
 	separator(col);
 
 	std::cout << "creating a map with 8 pairs inside..." << std::endl;
@@ -607,8 +600,7 @@ void	test_erase(Colors &col) // to test
 void	test_swap_clear(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing swap and clear methods..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing swap and clear methods..." << col.reset() << std::endl;
 	separator(col);
 
 	std::cout << "creating two maps with some pairs each" << std::endl;
@@ -647,7 +639,7 @@ void	test_swap_clear(Colors &col) // to test
 	test1.swap(test2);
 	
 	std::cout << "diplaying test1 (should output like test2)" << std::endl;
-	std::map<int, std::string>::iterator		it1 = test1.begin();
+	it1 = test1.begin();
 	while (it1 != test1.end())
 	{
 		std::cout << "test1[" << (*it1).first << "] = " << (*it1).second << std::endl;
@@ -656,7 +648,7 @@ void	test_swap_clear(Colors &col) // to test
 	std::cout << "test1.size = " << test1.size() << std::endl;
 
 	std::cout << "displaying the second map (should output like the first)" << std::endl;
-	std::map<int, std::string>::iterator		it2 = test2.begin();
+	it2 = test2.begin();
 	while (it2 != test2.end())
 	{
 		std::cout << "test2[" << (*it2).first << "] = " << (*it2).second << std::endl;
@@ -686,8 +678,7 @@ void	test_swap_clear(Colors &col) // to test
 void	test_comparators(Colors &col)
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing key_comp and value_comp..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing key_comp and value_comp..." << col.reset() << std::endl;
 	separator(col);
 
 	// TO IMPLEMENT
@@ -704,8 +695,7 @@ void	test_comparators(Colors &col)
 void	test_find_count(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing find and count..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing find and count..." << col.reset() << std::endl;
 	separator(col);
 
 	std::cout << "Create a map to test on it" << std::endl;
@@ -762,8 +752,7 @@ void	test_find_count(Colors &col) // to test
 void	test_bounds(Colors &col) // to test
 {
 	separator(col);
-	std::cout << col.bdYellow() << "Testing upper_bound and lower_bound..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing upper_bound and lower_bound..." << col.reset() << std::endl;
 	separator(col);
 
 	std::cout << "Create a map to test on it" << std::endl;
@@ -930,28 +919,19 @@ void	test_bounds(Colors &col) // to test
 void	map_verif_procedure(Colors &col)
 {	
 	separator(col);
-	std::cout << col.bdYellow() << "Testing map..." << col.reset()
-	<< std::endl << std::endl;
+	std::cout << col.bdYellow() << "Testing map..." << col.reset() << std::endl;
 	separator(col);
-	std::cout << "!!! Performance not tested there !!!" << std::endl;
 
-	/* constructors */
 	test_constructors(col);
-	/* iterators */
 	test_iterator(col);
 	test_reverse_iterator(col);
 	// add const iterators
-	/* capacity */
 	test_capacity(col);
-	/* test elem access */
 	test_access(col);
-	/* tests modifiers */
 	test_insert(col);
 	test_erase(col);
 	test_swap_clear(col);
-	/* test comparators */
 	test_comparators(col);
-	/* test ops */
 	test_find_count(col);
 	test_bounds(col);
 

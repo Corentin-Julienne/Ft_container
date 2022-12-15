@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:40:57 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/13 19:03:36 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/14 13:55:27 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include "../utils/pair.hpp"
 # include "./mapIterator.hpp"
 # include "../utils/reverseIterator.hpp"
-# include "./redBlackTree.hpp"
+# include "./trees/binarySearchTree.hpp"
 
 namespace ft
 {
@@ -33,7 +33,7 @@ namespace ft
 		class T,
 		class Compare = std::less<Key>,
 		class Alloc = std::allocator<ft::pair<const Key,T> >
-	> 
+	>
 	class map
 	{
 		/* ALIASES */
@@ -57,7 +57,7 @@ namespace ft
 			typedef ft::reverseIterator<iterator> 			reverse_iterator;
 			typedef ft::reverseIterator<const_iterator> 	const_reverse_iterator;
 			// tree
-			typedef ft::redBlackTree<Key, T, Alloc>			binary_tree;
+			typedef ft::binarySearchTree<Key, T, Alloc>		binary_tree;
 
 		/* CLASS TO COMPARE KEYS */
 
@@ -217,7 +217,7 @@ namespace ft
 				mapped_type		target = this->_tree.getValOfKey(k);
 
 				if (target == nullptr)
-					throw std::out_of_range();
+					throw std::out_of_range("map");
 				return (target);
 			}
 
@@ -227,7 +227,7 @@ namespace ft
 				const mapped_type		target = this->_tree.getValOfKey(k);
 
 				if (target == nullptr)
-					throw std::out_of_range();
+					throw std::out_of_range("map");
 				return (target);
 			}
 
@@ -317,12 +317,12 @@ namespace ft
 
 		/* OBSERVERS */
 
-			key_compare	key_comp() const
+			key_compare	key_comp(void) const
 			{
 				// TO IMPLEMENT
 			}
 
-			value_compare	value_comp() const
+			value_compare	value_comp(void) const
 			{
 				// TO IMPLEMENT
 			}
@@ -483,7 +483,7 @@ namespace ft
 	template <class Key, class T, class Compare, class Alloc>
 	bool	operator<(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) // to test
 	{
-		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); // ?
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); // ?
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
@@ -505,7 +505,7 @@ namespace ft
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	void	swap(map<Key, T, Compare, Alloc>& lhs, map<Key, T, Compare, Alloc>& rhs) { x.swap(y); }; // to test
+	void	swap(map<Key, T, Compare, Alloc>& lhs, map<Key, T, Compare, Alloc>& rhs) { lhs.swap(rhs); }; // to test
 }
 
 #endif

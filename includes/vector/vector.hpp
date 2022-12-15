@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:25:35 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/13 16:19:17 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/14 13:59:13 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@
 # include <vector>
 # include <cstddef>
 # include <sstream>
+# include <stdexcept>
 
 /* include other files */
 
-# include "VectorIterator.hpp"
+# include "./vectorIterator.hpp"
 # include "../utils/reverseIterator.hpp"
 # include "../utils/compare.hpp"
 
@@ -45,8 +46,8 @@ namespace ft // called by ft::Vector
 			typedef typename std::size_t 								size_type;
 			typedef typename std::ptrdiff_t 							difference_type;
 			/* aliases for iterators */
-			typedef typename ft::vectorIterator<T>						iterator;
-			typedef typename ft::vectorIterator<T, true>				const_iterator;
+			typedef typename ft::vectorIterator<value_type>				iterator;
+			typedef typename ft::vectorIterator<value_type, true>		const_iterator;
 			typedef typename ft::reverseIterator<iterator>				reverse_iterator;
 			typedef typename ft::reverseIterator<const_iterator>		const_reverse_iterator;
 
@@ -108,7 +109,7 @@ namespace ft // called by ft::Vector
 				if (n == this->_size)
 					return ;
 				if (n > this->max_size())
-					throw std::length_error(); // test this
+					throw std::length_error("vector"); // test this
 				if (n > this->_capacity)
 				{
 					this->_change_mem_allocated(n);
@@ -138,7 +139,7 @@ namespace ft // called by ft::Vector
 				if (n <= this->_capacity)
 					return ;
 				else if (n > this->max_size())
-					throw std::length_error();
+					throw std::length_error("vector");
 				else
 					this->_change_mem_allocated(n);
 			}
@@ -158,7 +159,7 @@ namespace ft // called by ft::Vector
 			reference	at(size_type n) // to test
 			{
 				if (n >= this->_size)
-					throw std::out_of_range();
+					throw std::out_of_range("vector");
 				return (this->operator[](n));
 			}
 			
@@ -167,7 +168,7 @@ namespace ft // called by ft::Vector
 			const_reference	at(size_type n) const // to test
 			{
 				if (n >= this->_size)
-					throw std::out_of_range();
+					throw std::out_of_range("vector");
 				return (this->operator[](n));
 			}
 			
@@ -212,7 +213,7 @@ namespace ft // called by ft::Vector
 			void	push_back(const value_type& val) // to test
 			{
 				if (this->size == this->max_size())
-					std::length_error();
+					std::length_error("vector");
 				if (this->_size == this->_capacity)
 					this->_expand_mem_allocated();
 				this->_alloc.construct(this->_ptr + this->_size + 1, val);
@@ -229,7 +230,7 @@ namespace ft // called by ft::Vector
 			iterator	insert(iterator position, const value_type& val) // to test
 			{
 				if (this->size == this->max_size)
-					throw std::length_error();
+					throw std::length_error("vector");
 				if (this->_size + 1 > this->_capacity)
 					this->_expand_mem_allocated();
 				if (position != this->end())
@@ -242,7 +243,7 @@ namespace ft // called by ft::Vector
 			void	insert(iterator position, size_type n, const value_type& val) // to test
 			{
 				if (this->_size + n > this->max_size())
-					throw std::length_error();
+					throw std::length_error("vector");
 				while (this->capacity() < (this->size() + n))
 					this->_expand_mem_allocated();
 				if (position != this->end())
@@ -259,7 +260,7 @@ namespace ft // called by ft::Vector
 				std::size_t			dist = last - first;
 				
 				if (this->_size + dist > this->max_size())
-					throw std::length_error();
+					throw std::length_error("vector");
 				while (this->capacity() < (this->size() + dist))
 					this->_expand_mem_allocated();
 				if (position != this->end())
@@ -381,10 +382,10 @@ namespace ft // called by ft::Vector
 				for (size_type i = 0; i < this->_size; i++)
 					tmp.push_back(this->at(i));
 				len = pos - it; // test this
-				for (std::size_t = len; len < this->size(); len++) // shift the vector values by n
+				for (std::size_t i = len; i < this->size(); i++) // shift the vector values by n
 				{
-					this->_alloc.destroy(this->_ptr + len);
-					this->_alloc.construct(this->_ptr + len + n, tmp[len]);
+					this->_alloc.destroy(this->_ptr + i);
+					this->_alloc.construct(this->_ptr + i + n, tmp[i]);
 				}
 			}
 
@@ -394,7 +395,7 @@ namespace ft // called by ft::Vector
 			{
 				std::size_t		dist = pos - this->begin();
 				
-				for (std::size_t i = 0; i < ; i++)
+				for (std::size_t i = 0; i < dist; i++)
 				{
 					this->_alloc.construct(this->_ptr + dist + i, *first);
 					first++;
@@ -431,7 +432,7 @@ namespace ft // called by ft::Vector
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) // to test
 	{
-		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); // ?
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); // ?
 	}
 
 	template <class T, class Alloc>

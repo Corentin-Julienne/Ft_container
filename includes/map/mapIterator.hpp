@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:41:03 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/13 18:06:09 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/15 11:56:42 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "../utils/iteratorTraits.hpp"
 # include "../utils/enableConst.hpp"
 # include "../utils/pair.hpp"
-# include "./Node.hpp" // add this
+# include "./node.hpp"
 
 # include <limits>
 # include <memory>
@@ -24,7 +24,6 @@
 # include <cstddef>
 # include <sstream>
 # include <functional>
-
 # include <iterator>
 
 namespace ft
@@ -43,8 +42,8 @@ namespace ft
 			typedef ft::pair<const Key, T> 														value_type;		
 			typedef std::ptrdiff_t																difference_type;
 			typedef std::size_t																	size_type;
-			typedef typename ft::enable_const<IsConst, *value_type, const *value_type>::type	pointer;
-			typedef typename ft::enable_const<IsConst, &value_type, const &value_type>::type	reference;
+			typedef typename ft::enable_const<IsConst, value_type*, const value_type*>::type	pointer;
+			typedef typename ft::enable_const<IsConst, value_type&, const value_type&>::type	reference;
 
 		private:
 

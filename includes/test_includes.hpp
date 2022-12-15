@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:46:01 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/13 18:06:09 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/14 13:56:04 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,24 @@
 #include <ctime>
 
 /* includes from namespace ft */
-#include "../../srcs/vector/Vector.hpp"
-#include "../../srcs/vector/VectorIterator.hpp"
-#include "../../srcs/map/Map.hpp"
-#include "../../srcs/map/mapIterator.hpp"
-#include "../../srcs/map/redBlackTree.hpp"
+// add vector and map
+#include "./vector/vector.hpp"
+#include "./vector/vectorIterator.hpp"
+#include "./map/map.hpp"
+#include "./map/mapIterator.hpp"
+#include "./map/node.hpp"
+#include "./map/trees/binarySearchTree.hpp"
+// add utils
+#include "./utils/compare.hpp"
+#include "./utils/enableConst.hpp"
+#include "./utils/enableIf.hpp"
+#include "./utils/isIntegral.hpp"
+#include "./utils/iteratorTraits.hpp"
+#include "./utils/pair.hpp"
+#include "./utils/reverseIterator.hpp"
 
 /* include from test utils */
-#include "./test_utils/Colors.hpp"
+#include "../srcs/test_utils/colors.hpp"
 
 /* utils */
 void		separator(Colors &col);

@@ -13,6 +13,8 @@
 #ifndef ENABLE_IF_HPP
 # define ENABLE_IF_HPP
 
+#include "../test_includes.hpp"
+
 /* enable_if is related to SFINAE (see next paragraph). enable_if check wether a condition is true,
 and enable the template substitution by the compiler. Otherwise, it makes it fails in a SFINAE way,
 using an ill-formed implementation intentionally */

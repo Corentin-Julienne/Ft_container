@@ -6,18 +6,21 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 14:06:11 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/28 11:47:53 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/15 11:27:55 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENABLE_CONST_HPP
 # define ENABLE_CONST_HPP
 
+#include "../test_includes.hpp"
+#include "../vector/vectorIterator.hpp"
+
 /* enableConst is not an util duplicated from the STL. However, it is useful in order to have a DRY code.
 enableConst is a struct which allows to have two used template specialization. When the typename IsConst is 
 true, then the struct member Type is of type Const, otherwise of type Var.
 
-Exemple for usage : 
+Example for usage : 
 
 typedef typename ft::enable_const<IsConst, value_type*, const value_type*>::type	pointer;
 typedef typename ft::enable_const<IsConst, value_type&, const value_type&>::type	reference;

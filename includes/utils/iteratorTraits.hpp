@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 13:54:14 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/12 16:31:44 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/14 12:31:46 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define ITERATOR_TRAITS_HPP
 
 #include <iterator>
+#include "../test_includes.hpp"
 
 namespace ft
 {

@@ -6,13 +6,14 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 11:08:56 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/28 16:22:01 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/14 16:45:38 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REVERSE_ITERATOR_HPP
 # define REVERSE_ITERATOR_HPP
 
+# include "../test_includes.hpp"
 # include "iteratorTraits.hpp"
 
 /* reverse iterators are made of standard iterators. There is a relation of -1 between an iterator and its 
@@ -45,8 +46,8 @@ namespace ft
 			
 			explicit reverseIterator(iterator_type it) : _current(it) {}
 			
-			template<class Iterator>
-			reverseIterator (const reverseIterator<Iterator>& rev_it) : _current(it._current) {}
+			template<class Iter>
+			reverseIterator (const reverseIterator<Iter>& rev_it) : _current(rev_it._current) {}
 			
 			iterator_type	base() const { return (this->_current); }
 
@@ -170,7 +171,7 @@ namespace ft
 	typename reverseIterator<Iterator>::difference_type	operator-(const reverseIterator<Iterator>& lhs, // to test
 			const reverseIterator<Iterator>& rhs)
 	{
-		return (rev_it->_current + n);
+		return (lhs.base() - rhs.base());
 	}
 }
 

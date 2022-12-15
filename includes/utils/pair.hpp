@@ -6,12 +6,14 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 15:46:29 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/29 17:01:50 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/14 12:31:50 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PAIR_HPP
 # define PAIR_HPP
+
+#include "../test_includes.hpp"
 
 namespace ft
 {
