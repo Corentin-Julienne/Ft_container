@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/14 11:24:34 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/15 12:16:58 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/15 17:57:44 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int main(int argc, char **argv) // to test
 	}
 	else if (!arg.compare("tree"))
 	{
-		// add tree verif procedure
+		tree_verification(col);
 	}
 	else if (!arg.compare("vector")) 
 	{

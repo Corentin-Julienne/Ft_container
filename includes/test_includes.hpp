@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:46:01 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/14 13:56:04 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/15 17:44:53 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@
 /* utils */
 void		separator(Colors &col);
 /* tests on tree */
-void		red_black_tree_verification(Colors &col);
+void		tree_verification(Colors &col);
 /* tests on map */
 void		map_verif_procedure(Colors &col);
 /* tests on vectors */

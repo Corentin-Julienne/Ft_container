@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:54 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/25 12:48:16 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/16 14:08:36 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@
 #include <iostream>
 #include <string>
 
-# define RED		true
-# define BLACK		false
+# include "../utils/pair.hpp"
+# include "./mapIterator.hpp"
+# include "../utils/reverseIterator.hpp"
+# include "./trees/binarySearchTree.hpp"
 
 namespace ft
 {
-	template <typename Key, typename T>
+	template <typename Key, typename T, class Alloc>
 	class Node
 	{
 		
@@ -32,17 +34,21 @@ namespace ft
 			/* ALIASES */
 			typedef Key										key_type;
 			typedef T										mapped_type;
-			typedef std::pair<const Key, T>					value_type;
+			typedef ft::pair<const Key, T>					value_type;
+			typedef Alloc									allocator_type;
 			typedef typename std::size_t 					size_type;
 			typedef typename std::ptrdiff_t 				difference_type;
 			
 			/* CONSTRUCTORS AND DESTRUCTORS, OVERLOADING OPERATOR = */
 
-			Node(value_type pair) : _color(BLACK), _parent(nullptr), _left(nullptr), _right(nullptr), _val(pair) {};
+			Node(value_type pair) : _parent(nullptr), _left(nullptr), _right(nullptr) 
+			{
+				this->_alloc.construct(); 
+			};
 			
 			~Node() {}
 
-			Node(const Node &original) : _val(original._val), _color(original._color), _parent(original._parent),
+			Node(const Node &original) : _val(original._val), _parent(original._parent),
 			_left(original._left), _right(original._right) {};
 
 			Node&	operator=(const Node &original)
@@ -50,7 +56,6 @@ namespace ft
 				if (this != &original)
 				{
 					this->_val = original._val;
-					this->_color = original._color;
 					this->_parent = original._parent;
 					this->_left = original._left;
 					this->_right = original._right;
@@ -69,10 +74,10 @@ namespace ft
 		public:
 		
 			value_type			_val; // is a pair
-			bool				_color;
 			Node				*_parent;
 			Node				*_left;
 			Node				*_right;
+			allocator_type		_alloc;
 
 		private:
 

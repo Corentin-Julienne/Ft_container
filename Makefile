@@ -6,7 +6,7 @@
 #    By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/25 16:33:33 by cjulienn          #+#    #+#              #
-#    Updated: 2022/12/15 16:27:41 by cjulienn         ###   ########.fr        #
+#    Updated: 2022/12/15 17:58:34 by cjulienn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ SRCS = ./srcs/tests.cpp \
 	   ./srcs/test_utils/colors.cpp \
 	   ./srcs/test_utils/other.cpp \
 	   ./srcs/vector/vector_tests.cpp \
-	   ./srcs/map/map_tests.cpp \
+	   ./srcs/map/tree_tests.cpp \
+	#    ./srcs/map/map_tests.cpp \
 	#    ./srcs/vector/vector_speedtests.cpp \
 	#    ./srcs/map/map_speedtests.cpp \
 	#    ./srcs/maptree_tests.cpp

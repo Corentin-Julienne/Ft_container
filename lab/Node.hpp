@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:54 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/11/24 15:25:00 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/16 15:28:55 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <iostream>
 #include <string>
 
-namespace lab
+namespace ft
 {
 	template <typename Key, typename T>
 	class Node
@@ -35,11 +35,11 @@ namespace lab
 			
 			/* CONSTRUCTORS AND DESTRUCTORS, OVERLOADING OPERATOR = */
 
-			Node(value_type pair) : _color(BLACK), _parent(nullptr), _left(nullptr), _right(nullptr), _val(pair) {};
+			Node(value_type pair) : _parent(nullptr), _left(nullptr), _right(nullptr), _val(pair) {};
 			
 			~Node() {}
 
-			Node(const Node &original) : _val(original._val), _color(original._color), _parent(original._parent),
+			Node(const Node &original) : _val(original._val), _parent(original._parent),
 			_left(original._left), _right(original._right) {};
 
 			Node&	operator=(const Node &original)
@@ -47,7 +47,6 @@ namespace lab
 				if (this != &original)
 				{
 					this->_val = original._val;
-					this->_color = original._color;
 					this->_parent = original._parent;
 					this->_left = original._left;
 					this->_right = original._right;
@@ -66,7 +65,6 @@ namespace lab
 		public:
 		
 			value_type			_val; // is a pair
-			bool				_color;
 			Node				*_parent;
 			Node				*_left;
 			Node				*_right;
