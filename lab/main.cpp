@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:35:08 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/18 18:17:44 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/19 15:07:08 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 #include "./node.hpp"
 #include "./binarySearchTree.hpp"
+#include "./AVLTree.hpp"
 
 static void	leaks_tracking(void)
 {
@@ -34,6 +35,7 @@ int main(void)
 	atexit(leaks_tracking);
 
 	ft::binarySearchTree<int, std::string>			tree; // example tree
+	ft::AVLTree<int, std::string>					avl_tree;
 
 	std::cout << "print the empty tree" << std::endl;
 	tree.printTree();

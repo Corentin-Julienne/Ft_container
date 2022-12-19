@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:54 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/16 15:28:55 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/18 19:11:12 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 #include <memory>
 #include <iostream>
 #include <string>
+
+#define BLACK		0
+#define RED			1
 
 namespace ft
 {
@@ -35,12 +38,12 @@ namespace ft
 			
 			/* CONSTRUCTORS AND DESTRUCTORS, OVERLOADING OPERATOR = */
 
-			Node(value_type pair) : _parent(nullptr), _left(nullptr), _right(nullptr), _val(pair) {};
+			Node(value_type pair) : _parent(nullptr), _left(nullptr), _right(nullptr), _val(pair), _col(BLACK), _bf(0) {};
 			
-			~Node() {}
+			~Node() {};
 
 			Node(const Node &original) : _val(original._val), _parent(original._parent),
-			_left(original._left), _right(original._right) {};
+			_left(original._left), _right(original._right), _col(original._col), _bf(original._bf) {};
 
 			Node&	operator=(const Node &original)
 			{
@@ -50,6 +53,8 @@ namespace ft
 					this->_parent = original._parent;
 					this->_left = original._left;
 					this->_right = original._right;
+					this->_col = original.col;
+					this->_bf = original._bf;
 				}
 				return *this;
 			}
@@ -68,6 +73,8 @@ namespace ft
 			Node				*_parent;
 			Node				*_left;
 			Node				*_right;
+			int					_bf; // used for AVL
+			bool				_col; // used for RBT
 
 		private:
 
