@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 18:54:49 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/19 15:08:41 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/20 12:11:40 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ namespace ft
 
 			/* GETTERS */
 			
-			size_type	getSize(void)	{ return (this->_size); };
-			node*		getRoot(void)	{ return (this->_root); };
+			size_type	getSize(void)		{ return (this->_size); };
+			node*		getRoot(void)		{ return (this->_root); };
 			node*		getMinNode(void)	{ return (this->_root->getTreeMin(this->_root)); };
 			node*		getMaxNode(void)	{ return (this->_root->getTreeMax(this->_root)); };
 
@@ -115,7 +115,7 @@ namespace ft
 			/* INSERTION FUNCTIONS */
 
 			/* create a node and insert it using a standard BST methodology */
-			void	binarySearchTreeInsertion(const value_type &val, int tree = AVL) // to test
+			void	treeInsertion(const value_type &val, int tree = AVL) // to test
 			{
 				node		*newNode = this->_createNewNode(val);
 				
@@ -143,7 +143,7 @@ namespace ft
 			void	deleteNode(const Key &key, int tree = AVL) // to test
 			{
 				if (tree == AVL)
-					this->_AVLtreeDelete(key);
+					this->_AVLtreeDelete(this->_root, key);
 				else
 					this->_treeDelete(this->_root, key);
 			}
@@ -188,6 +188,30 @@ namespace ft
 					target = target->getTreeSucc(target);
 					i++;
 				}
+			}
+
+
+			/* debug functions used to test basic subops of AVL tree 
+			!!! NOT TO USE OUTSIDE OF DEBUGGING TESTS !!!*/
+			
+			void	useRotateRight(node *target)
+			{
+				this->_AVL_right_rotation(target);				
+			}
+
+			void	useRotatateLeft(node *target)
+			{
+				this->_AVL_left_rotation(target);
+			}
+
+			void	useRotateRightLeft(node *target)
+			{
+				this->_AVL_right_left_rotation(target);				
+			}
+
+			void	useRotateLeftRight(node *target)
+			{
+				this->_AVL_left_right_rotation(target);
 			}
 			
 		private:
@@ -380,14 +404,13 @@ namespace ft
 				/* update bf values:
 				=> newBal(x) = oldBal(x) - 1 - max(0, oldBal(y))
 				=> newBal(y) = oldBal(y) - 1 + min(0, newBal(x)) */
-
-				// yet to implement
+				a->_bf = a->_bf - 1 - std::max(0, b->_bf);
+				b->_bf = b->_bf - 1 + std::min(0, a->_bf);
 			}
 
 			void	_AVL_right_rotation(node *a) // to test
 			{
 				node		*b = a->_left;
-				node		*c = b->_left;
 				node		*tmp;
 
 				// b becomes the new subtree root
@@ -407,8 +430,8 @@ namespace ft
 				/* update bf values:
 				=> newBal(x) = oldBal(x) + 1 - max(0, oldBal(y))
 				=> newBal(y) = oldBal(y) + 1 + max(0, newBal(x)) */
-
-				// yet to implement
+				a->_bf = a->_bf + 1 - std::max(0, b->_bf);
+				b->_bf = b->_bf + 1 + std::max(0, a->_bf);
 			}
 
 			/* Perform the right rotation on the right subtree.
@@ -428,7 +451,7 @@ namespace ft
 			}
 
 			/* to check wether the tree is balanced, start should be equal to root */
-			bool	is_tree_balanced(node *start) // to test // probably not time efficient
+			bool	_is_tree_balanced(node *start) // to test // probably not time efficient
 			{
 				node			*min = start->getTreeMin(start);
 				node			*max = start->getTreeMax(start);
@@ -445,16 +468,16 @@ namespace ft
 			/* rebalance the tree using rotations functions */
 			void	_rebalanceTree(node *start) // to test
 			{
-				if (start->bf > 0) 
+				if (start->_bf > 0) 
 				{
-					if (start->right->bf < 0) 
+					if (start->_right->_bf < 0) 
 						this->_AVL_right_left_rotation(start);
 					else 
 						this->_AVL_left_rotation(start);
 				} 
-				else if (start->bf < 0) 
+				else if (start->_bf < 0) 
 				{
-					if (start->left->bf > 0)
+					if (start->_left->_bf > 0)
 						this->_AVL_left_right_rotation(start);
 					else
 						this->_AVL_right_rotation(start);
@@ -477,7 +500,7 @@ namespace ft
 
 			void	_AVLtreeDelete(node *start, const Key& key) // to test
 			{
-				node		*z = start->_treeSearch(start, key); // search for corresponding node with key
+				node		*z = start->getTreeSearch(start, key); // search for corresponding node with key
 				
 				z = z->_parent; // look for update parent
 				this->_treeDelete(start, key); // standard bst deletion

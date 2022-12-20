@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:52:54 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/18 19:11:12 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/20 11:34:22 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ namespace ft
 
 			Node	*getTreeSearch(Node *x, const Key k) { return this->_treeSearch(x, k); };
 			Node	*getTreeMin(Node *x) { return this->_treeMinimum(x); };
-			Node	*getTreeMax(Node *x) { return this->_treeMaximun(x); };
+			Node	*getTreeMax(Node *x) { return this->_treeMaximum(x); };
 			Node	*getTreeSucc(Node *x) { return this->_treeSuccessor(x); };
 			Node	*getTreePred(Node *x) { return this->_treePredecessor(x); };
 
@@ -95,7 +95,7 @@ namespace ft
 				return (x);
 			}
 
-			Node	*_treeMaximun(Node *x) // to test
+			Node	*_treeMaximum(Node *x) // to test
 			{
 				while (x->_right != nullptr)
 					x = x->_right;
@@ -120,7 +120,7 @@ namespace ft
 			Node	*_treePredecessor(Node *x) // to test
 			{
 				if (x->_left != nullptr)
-					return (_treeMinimum(x->_left));
+					return (_treeMaximum(x->_left));
 				
 				Node	*y = x->_parent;
 
