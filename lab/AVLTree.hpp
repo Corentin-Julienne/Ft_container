@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 18:54:49 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/20 18:04:21 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/21 13:57:51 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ namespace ft
 
 				return (maxNode->_val.second);
 			}
-			
-			/* PUBLIC METHODS */
 
 			/* INSERTION FUNCTIONS */
 
@@ -188,30 +186,6 @@ namespace ft
 					target = target->getTreeSucc(target);
 					i++;
 				}
-			}
-
-
-			/* debug functions used to test basic subops of AVL tree 
-			!!! NOT TO USE OUTSIDE OF DEBUGGING TESTS !!!*/
-			
-			void	useRotateRight(node *target)
-			{
-				this->_AVL_right_rotation(target);				
-			}
-
-			void	useRotatateLeft(node *target)
-			{
-				this->_AVL_left_rotation(target);
-			}
-
-			void	useRotateRightLeft(node *target)
-			{
-				this->_AVL_right_left_rotation(target);				
-			}
-
-			void	useRotateLeftRight(node *target)
-			{
-				this->_AVL_left_right_rotation(target);
 			}
 			
 		private:
@@ -421,17 +395,18 @@ namespace ft
 				b->_bf = b->_bf + 1 + std::max(0, a->_bf);
 			}
 
-			/* Perform the right rotation on the right subtree.
-			Then, Perform the left rotation on the root node */
-			void	_AVL_left_right_rotation(node *a) // to test
-			{
-				this->_AVL_right_rotation(a->_right);
-				this->_AVL_left_rotation(a);
-			}
 
 			/* Perform the left rotation on the left subtree.
 			Then, perform the right rotation on the root node. */
 			void	_AVL_right_left_rotation(node *a) // to test
+			{
+				this->_AVL_right_rotation(a->_right);
+				this->_AVL_left_rotation(a);
+			}
+			
+			/* Perform the right rotation on the right subtree.
+			Then, Perform the left rotation on the root node */
+			void	_AVL_left_right_rotation(node *a) // to test
 			{
 				this->_AVL_left_rotation(a->_left);
 				this->_AVL_right_rotation(a);
@@ -443,24 +418,16 @@ namespace ft
 				if (start->_bf > 0) 
 				{
 					if (start->_right->_bf < 0)
-					{
 						this->_AVL_right_left_rotation(start);
-					}
 					else 
-					{
 						this->_AVL_left_rotation(start);
-					}
 				} 
 				else if (start->_bf < 0) 
 				{
 					if (start->_left->_bf > 0)
-					{
 						this->_AVL_left_right_rotation(start);
-					}
 					else
-					{
 						this->_AVL_right_rotation(start);
-					}
 				}
 			}
 
@@ -481,12 +448,14 @@ namespace ft
 			{
 				node		*z = start->getTreeSearch(start, key);
 				
-				z = z->_parent;
 				this->_treeDelete(start, key);
 				this->_update_balance_factor(z);	
 			}
 			
 			/* STANDARD BST FUNCTIONS */
+
+			/* inserts a value in a tree, without caring to the 
+			equilibrium of the tree (standard BST insertion) */
 			void	_treeInsert(node *z) // functionnal
 			{
 				node		*y = nullptr;
@@ -507,7 +476,7 @@ namespace ft
 					y->_left = z;
 				else
 					y->_right = z;
-				this->_size++; // add to the size of the binary search tree
+				this->_size++;
 			}
 
 			/* should be used with start == this->_root */
@@ -527,7 +496,7 @@ namespace ft
 							start->_parent->_left = nullptr;
 						else if (this->_is_right_child(start))
 							start->_parent->_right = nullptr;
-						if (start == this->_root) // case target is root
+						if (start == this->_root)
 							this->_change_root(start, LEAF);
 						this->_deleteNode(start);
 						start = nullptr;
@@ -537,14 +506,14 @@ namespace ft
 						node	*tmp = start;
 						
 						start = start->_right;
-						if (this->_is_left_child(tmp)) // links parent to start
+						if (this->_is_left_child(tmp))
 							tmp->_parent->_left = start;
-						else if (this->_is_right_child(tmp)) // links parent to start
+						else if (this->_is_right_child(tmp))
 							tmp->_parent->_right = start;
 						if (tmp->_parent)
-							start->_parent = tmp->_parent; // links start to its new parent
+							start->_parent = tmp->_parent;
 						if (tmp == this->_root)
-							this->_change_root(tmp, RIGHT); // moving root to right child
+							this->_change_root(tmp, RIGHT);
 						this->_deleteNode(tmp);
 						tmp = nullptr;
 					}
@@ -553,14 +522,14 @@ namespace ft
 						node	*tmp = start;
 						
 						start = start->_left;
-						if (this->_is_left_child(tmp)) // links parent to start
+						if (this->_is_left_child(tmp))
 							tmp->_parent->_left = start;
-						else if (this->_is_right_child(tmp)) // links parent to start
+						else if (this->_is_right_child(tmp))
 							tmp->_parent->_right = start;
 						if (tmp->_parent)
-							start->_parent = tmp->_parent; // links start to its new parent 
+							start->_parent = tmp->_parent;
 						if (tmp == this->_root)
-							this->_change_root(tmp, LEFT); // moving root to left child
+							this->_change_root(tmp, LEFT);
 						this->_deleteNode(tmp);
 						tmp = nullptr;
 					}
@@ -576,7 +545,7 @@ namespace ft
 						start->_right = _treeDelete(start->_right, tmp->_val.first);
 					}
 				}
-				this->_size--; // withdraw one to size of the binary search tree
+				this->_size--;
 				return (start);
 			}
 			
