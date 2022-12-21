@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 18:54:49 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/20 12:11:40 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/20 18:04:21 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,73 +334,54 @@ namespace ft
 
 			/* AVL Helpers */
 
-			/* calc the distance to root by iterate through pointers to parent */
-			int		_dist_to_root(node *start) // to test
-			{
-				int			res = 0;
-
-				while (start)
-				{
-					res++;
-					start = start->_parent;
-				}
-				return (res);
-			}
-			
-			/* used to calculate the max depth of a subtree. Used to further calculate balanced factor */
-			int		_calc_subtree_depth(node *subtree) // to test
-			{
-				node		*min = subtree->getTreeMin(subtree);
-				node		*max = subtree->getTreeMax(subtree);
-				int			res = 0;
-				int			dist;
-				
-				if (subtree == nullptr)
-					return (0);
-				while (min->_val.first != max->_val.first)
-				{
-					dist = this->_dist_to_root(min);
-					if (dist > res)
-						res = dist;
-					min = min->getTreeSucc(min);	
-				}
-				return (res);
-			}
-
 			/* update or calculate balance factor (int bf) of a given node
 			bf formula equal to |   bf(node) = depth(RS(node)) - depth(LS(node))   |  
 			where RS = right subtree ans LS = left subtree */
-			int		_calc_balance_factor(node *start) // to test
-			{
-				int			right_depth = this->_calc_subtree_depth(start->_right);
-				int			left_depth = this->_calc_subtree_depth(start->_left);
-				
-				return (right_depth - left_depth);
+			void	_update_balance_factor(node *target)
+			{				
+				if (target->_bf < -1 || target->_bf > 1) // if tree unbalanced, trigger algo triggering relevant rotations
+				{
+					this->_rebalanceTree(target); // never triggered by newly inserted value
+					return ;
+				}
+				if (target->_parent != nullptr)
+				{
+					if (this->_is_left_child(target))
+						target->_parent->_bf -= 1;
+					else if (this->_is_right_child(target))
+						target->_parent->_bf += 1;
+					if (target->_parent->_bf != 0)
+						this->_update_balance_factor(target->_parent); // update balance factor of parent
+				}
 			}
 
 			/* AVL HELPER MODIF FUNCTIONS */
 
+			/* perform a left rotation on node a. Basically,
+			in a configuration when b is the right child of a and c a right child of b,
+			we proceed in 3 steps :
+			1] b becomes the new root (or subroot case a was not the root of the tree)
+			2] a takes ownership of b’s child as its right child (or nullptr if b's child is equal to nullptr)
+			3] b takes ownership of a as its left child */
 			void	_AVL_left_rotation(node *a) // to test
-			{
+			{	
 				node		*b = a->_right;
-				node		*c = b->_right;
-				node		*tmp;
 
-				// b becomes the new subtree root
-				b->_parent = a->_parent; // replace parent node of b by a
-				if (this->_is_left_child(a)) // links parent of a to b
-					a->_parent->_left = b;
-				else if (this->_is_right_child(a)) // links parent of a to b 
-					a->_parent->_right = b;
-				tmp = b->_left;
-				b->_left = a;
-				b->_right = c;
-				// a becomes left child of b
-				a->_parent = b;
-				a->_right = tmp;
-				// if a  equal to root, we need to change this->_root
-				if (a->_val.first == this->_root->_val.first)
+				/* transfer ownership from b left child to a right child */
+				a->_right = b->_left; 
+				if (b->_left != nullptr)
+					b->_left->_parent = a;
+				/* change parent relationship from a to b */
+				b->_parent = a->_parent;
+				if (a->_parent == nullptr)
 					this->_root = b;
+				else if (this->_is_left_child(a))
+					a->_parent->_left = b;
+				else
+					a->_parent->_right = b;
+				/* establish new relation between a and b */
+				b->_left = a;
+				a->_parent = b;
 				/* update bf values:
 				=> newBal(x) = oldBal(x) - 1 - max(0, oldBal(y))
 				=> newBal(y) = oldBal(y) - 1 + min(0, newBal(x)) */
@@ -408,25 +389,31 @@ namespace ft
 				b->_bf = b->_bf - 1 + std::min(0, a->_bf);
 			}
 
-			void	_AVL_right_rotation(node *a) // to test
-			{
+			/* perform a right rotation on node a. Basically,
+			in a configuration when b is the left child of a and c a left child of b,
+			we proceed in 3 steps : 
+			1] b becomes the new root (or subroot case a was not the root of the tree)
+			2] c takes ownership of b’s right child, as its left child (or nullptr if b's right child is equal to nullptr).
+			3] b takes ownership of c, as its right child */
+			void	_AVL_right_rotation(node *a) // to test 
+			{	
 				node		*b = a->_left;
-				node		*tmp;
 
-				// b becomes the new subtree root
-				b->_parent = a->_parent; // replace parent node b by c
-				if (this->_is_left_child(a)) // links parent of c to b
-					a->_parent->_left = b;
-				else if (this->_is_right_child(a)) // links parent of c to b 
-					a->_parent->_right = b;
-				tmp = b->_right;
-				b->_right = a;
-				// c takes ownership of b’s right child, as its left child
-				a->_parent = b;
-				a->_left = tmp;	
-				// if c is equal to root, we need to change this->_root
-				if (a->_val.first == this->_root->_val.first)
+				/* transfer ownership from b right child to a left child */
+				a->_left = b->_right;
+				if (b->_right != nullptr)
+					b->_right->_parent = a;
+				/* change parent relationship from a to b */
+				b->_parent = a->_parent;
+				if (a->_parent == nullptr)
 					this->_root = b;
+				else if (this->_is_right_child(a))
+					a->_parent->_right = b;
+				else
+					a->_parent->_left = b;
+				/* establish new relation between a and b */
+				b->_right = a;
+				a->_parent = b;
 				/* update bf values:
 				=> newBal(x) = oldBal(x) + 1 - max(0, oldBal(y))
 				=> newBal(y) = oldBal(y) + 1 + max(0, newBal(x)) */
@@ -450,67 +437,53 @@ namespace ft
 				this->_AVL_right_rotation(a);
 			}
 
-			/* to check wether the tree is balanced, start should be equal to root */
-			bool	_is_tree_balanced(node *start) // to test // probably not time efficient
-			{
-				node			*min = start->getTreeMin(start);
-				node			*max = start->getTreeMax(start);
-
-				while (min->_val.first == max->_val.first)
-				{
-					if (min->_bf != 0 && min->_bf != -1 && min->_bf != 1)
-						return (false);
-					min = min->getTreeSucc(min);
-				}
-				return (true);
-			}
-
 			/* rebalance the tree using rotations functions */
 			void	_rebalanceTree(node *start) // to test
 			{
 				if (start->_bf > 0) 
 				{
-					if (start->_right->_bf < 0) 
+					if (start->_right->_bf < 0)
+					{
 						this->_AVL_right_left_rotation(start);
+					}
 					else 
+					{
 						this->_AVL_left_rotation(start);
+					}
 				} 
 				else if (start->_bf < 0) 
 				{
 					if (start->_left->_bf > 0)
+					{
 						this->_AVL_left_right_rotation(start);
+					}
 					else
+					{
 						this->_AVL_right_rotation(start);
+					}
 				}
 			}
 
 			/* AVL MODIFICATION FUNCTIONS */
 
+			/* performs a standard BST insertion. Then, update balance factor of z and its parents,
+			and performs rotations if necessary */
 			void	_AVLtreeInsert(node *z) // to test
 			{
-				this->_treeInsert(z); // standard BST insertion
-				while (z)
-				{
-					z->_bf = this->_calc_balance_factor(z); // update balance factor
-					if (z->_bf != 0 && z->_bf != -1 && z->_bf != 1)
-						this->_rebalanceTree(z); // rebalance using rotations and use its bf recalculations functions
-					z = z->_parent;
-				}
+				this->_treeInsert(z);
+				this->_update_balance_factor(z);
 			}
 
+			/* search for the parent node corresponding to the node corresponding to key, 
+			then performs standard BST deletion with key, then update balance factor of node parent and its parent,
+			and finally performs rotations if necessary */
 			void	_AVLtreeDelete(node *start, const Key& key) // to test
 			{
-				node		*z = start->getTreeSearch(start, key); // search for corresponding node with key
+				node		*z = start->getTreeSearch(start, key);
 				
-				z = z->_parent; // look for update parent
-				this->_treeDelete(start, key); // standard bst deletion
-				while (z)
-				{
-					z->_bf = this->_calc_balance_factor(z); // update balance factor
-					if (z->_bf != 0 && z->_bf != -1 && z->_bf != 1)
-						this->_rebalanceTree(z); // rebalance using rotations and use its bf recalculations functions
-					z = z->_parent;
-				}
+				z = z->_parent;
+				this->_treeDelete(start, key);
+				this->_update_balance_factor(z);	
 			}
 			
 			/* STANDARD BST FUNCTIONS */
@@ -534,18 +507,17 @@ namespace ft
 					y->_left = z;
 				else
 					y->_right = z;
-				// add to the size of the binary search tree
-				this->_size++;
+				this->_size++; // add to the size of the binary search tree
 			}
 
 			/* should be used with start == this->_root */
 			node	*_treeDelete(node *start, const Key key) // to test
 			{
-				if (start == nullptr) // case target is NULL
+				if (start == nullptr)
 					return (nullptr);
-				else if (key < start->_val.first) // case key inferior to start node
+				else if (key < start->_val.first)
 					start->_left = this->_treeDelete(start->_left, key);
-				else if (key > start->_val.first) // case key superior to start node
+				else if (key > start->_val.first)
 					start->_right = this->_treeDelete(start->_right, key);
 				else // we reached the target node, now we have to make relevant ops
 				{
@@ -604,8 +576,7 @@ namespace ft
 						start->_right = _treeDelete(start->_right, tmp->_val.first);
 					}
 				}
-				// withdraw one to size of the binary search tree
-				this->_size--;
+				this->_size--; // withdraw one to size of the binary search tree
 				return (start);
 			}
 			
@@ -622,14 +593,14 @@ namespace ft
 					std::cout << "parent = " << target->_parent->_val.first << std::endl;
 				else
 					std::cout << "parent = nullptr" << std::endl;
-				if (target->_left)
-					std::cout << "left child = " << target->_left->_val.first << std::endl;
-				else
-					std::cout << "left child = nullptr" << std::endl;
 				if (target->_right)
 					std::cout << "right child = " << target->_right->_val.first << std::endl;
 				else
 					std::cout << "right child = nullptr" << std::endl;
+				if (target->_left)
+					std::cout << "left child = " << target->_left->_val.first << std::endl;
+				else
+					std::cout << "left child = nullptr" << std::endl;
 				std::cout << "bf = " << target->_bf << std::endl;
 			}
 	};
