@@ -6,7 +6,7 @@
 /*   By: cjulienn <cjulienn@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 18:54:49 by cjulienn          #+#    #+#             */
-/*   Updated: 2022/12/21 13:57:51 by cjulienn         ###   ########.fr       */
+/*   Updated: 2022/12/21 17:55:48 by cjulienn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,47 @@
 #define STD				1
 #define AVL				2
 
+/*
+
+	SYNOPSIS : AVL tree is used by map to store and iterate over values (pairs) that are embedded within the map object.
+
+	Important Note : in case of trying to insert or delete a non existing key, the AVL tree produces undefined behaviour.
+	Those cases should be handled directly by map methods.
+
+	Contains the following prototypes (public functions only) :
+
+	1] Coplien form (basic constructor, destructor, copy constructor, operator = overload)
+	
+	=>  AVLTree() : _root(nullptr), _size(0), _pair_alloc(Alloc());
+	=>	~AVLTree() 
+	=>	AVLTree(const AVLTree &original) : _root(original._root), _size(original._size),
+		_pair_alloc(original._pair_alloc), _node_alloc(original._node_alloc) {};
+	=>	AVLTree&	operator=(const AVLTree &original);
+
+	2] Getters
+
+	=>	size_type	getSize(void);
+	=>	node*		getRoot(void);		
+	=>	node*		getMinNode(void);	
+	=>	node*		getMaxNode(void);	
+	=>	key_type	getMinKey(void);
+	=>	key_type	getMaxKey(void);
+	=>	mapped_type	getMinVal(void);
+	=>	mapped_type	getMaxVal(void);
+
+	3] Public Methods
+	
+	=>	void	treeInsertion(const value_type &val, int tree = AVL);
+	=>	bool	IsKeyAlreadyExisting(const Key &key);
+	=>	void	deleteNode(const Key &key, int tree = AVL);
+	=>	void	postOrderTraversalDeletion(node *elem);
+
+	4] Public Debug Methods
+
+	=>	void	printTree(void);
+	=>	void	printNodes(void);
+*/
+
 namespace ft
 {
 	template < 
@@ -49,7 +90,7 @@ namespace ft
 			typedef Alloc								allocator_type;
 			typedef Node<Key, T>						node;
 
-			/* CONSTRUCTORS AND DESTRUCTORS */
+		/* CONSTRUCTORS AND DESTRUCTORS */
 			AVLTree() : _root(nullptr), _size(0), _pair_alloc(Alloc())
 			{
 				this->_node_alloc = std::allocator<node>();
@@ -75,7 +116,7 @@ namespace ft
 				return *this;
 			}
 
-			/* GETTERS */
+		/* GETTERS */
 			
 			size_type	getSize(void)		{ return (this->_size); };
 			node*		getRoot(void)		{ return (this->_root); };
@@ -110,10 +151,10 @@ namespace ft
 				return (maxNode->_val.second);
 			}
 
-			/* INSERTION FUNCTIONS */
+		/* PUBLIC METHODS */
 
 			/* create a node and insert it using a standard BST methodology */
-			void	treeInsertion(const value_type &val, int tree = AVL) // to test
+			void	treeInsertion(const value_type &val, int tree = AVL)
 			{
 				node		*newNode = this->_createNewNode(val);
 				
@@ -122,8 +163,6 @@ namespace ft
 				else
 					this->_treeInsert(newNode);
 			}
-
-			/* SEARCH FUNCTIONS */
 
 			/* check whether a key exists or not */
 			bool	IsKeyAlreadyExisting(const Key &key)
@@ -135,10 +174,8 @@ namespace ft
 				return (true);
 			}
 
-			/* TREE AND NODE DELETION FUNCTIONS */
-
 			/* deletes a node by identifying it by its key */
-			void	deleteNode(const Key &key, int tree = AVL) // to test
+			void	deleteNode(const Key &key, int tree = AVL)
 			{
 				if (tree == AVL)
 					this->_AVLtreeDelete(this->_root, key);
@@ -147,7 +184,7 @@ namespace ft
 			}
 
 			/* to cover the full tree, elem must be equal to this->_root */
-			void	postOrderTraversalDeletion(node *elem) // to test
+			void	postOrderTraversalDeletion(node *elem)
 			{
 				if (elem != nullptr)
 				{
@@ -157,7 +194,7 @@ namespace ft
 				}
 			}
 
-			/* DEBUG PUBLIC FUNCTIONS */
+		/* DEBUG PUBLIC METHODS */
 
 			/* print the tree in 2D : the root value appears in the center of the vertical axis,
 			in the left side of the terminal. Debug and visual function */
@@ -197,12 +234,12 @@ namespace ft
 
 		private:
 
-			/* HELPERS */
+		/* GENERAL HELPERS */
 
 			/* allocate memory for a node creation, then create it */
 			node	*_createNewNode(const value_type &val)
 			{
-				node		*newNode = this->_node_alloc.allocate(1); // alloc space for a node
+				node		*newNode = this->_node_alloc.allocate(1);
 
 				this->_pair_alloc.construct(&newNode->_val, val);
 				newNode->_parent = nullptr;
@@ -213,7 +250,7 @@ namespace ft
 			}
 
 			/* delete a node and free its memory */
-			void	_deleteNode(node *target) // to test
+			void	_deleteNode(node *target)
 			{
 				this->_pair_alloc.destroy(&target->_val);
 				this->_node_alloc.deallocate(target, 1);
@@ -221,7 +258,7 @@ namespace ft
 			}
 
 			/*  space should be equal to 0, target to this->_root */
-			void	_printTree(node *target, int space) // functionnal
+			void	_printTree(node *target, int space)
 			{
 				const int	indent = 5;
 				
@@ -238,7 +275,7 @@ namespace ft
 
 			/* create a copy of a node, but with another key,
 			then replace links from other links from target to newNode */
-			node	*_replace_key(node *target, value_type newPair) // to test
+			node	*_replace_key(node *target, value_type newPair)
 			{
 				node	*newNode = this->_createNewNode(newPair);
 
@@ -260,43 +297,15 @@ namespace ft
 				return (newNode);
 			}
 
-			/* returns a copy of a dynamically allocated node (not shallow copy) */
-			node	*_copyNode(node *target)
-			{
-				node	*cpy = this->_createNewNode(target->_val);
-				
-				cpy->_color = target->_color;
-				cpy->_parent = target->_parent;
-				cpy->_left = target->_left;
-				cpy->_right = target->_right;
-				return (cpy);
-			}
-
-			/* check whether a node is a left child of its parent.
-			returns true if it is the case, false if it is the right child or has
-			no parent */
-			bool	_is_left_child(node *target) // to test
-			{
-				if (target->_parent == nullptr || target->_parent->_left != target)
-					return (false);
-				return (true);
-			}
-
-			/* check whether a node is a right child of its parent.
-			returns true if it is the case, false if it is the left child or has
-			no parent */
-			bool	_is_right_child(node *target) // to test
-			{
-				if (target->_parent == nullptr || target->_parent->_right != target)
-					return (false);
-				return (true);
-			}
-
 			/*  change the root after root deletion */
 			void	_change_root(node *target, int type)
 			{
+				std::cout << "go there and key = " << target->_val.first << std::endl;
 				if (type == LEAF)
+				{
 					this->_root = nullptr;
+					return ;
+				}
 				else if (type == RIGHT)
 					this->_root = target->_right;
 				else if (type == LEFT)
@@ -306,7 +315,27 @@ namespace ft
 				this->_root->_parent = nullptr;
 			}
 
-			/* AVL Helpers */
+			/* check whether a node is a left child of its parent.
+			returns true if it is the case, false if it is the right child or has
+			no parent */
+			bool	_is_left_child(node *target)
+			{
+				if (target->_parent == nullptr || target->_parent->_left != target)
+					return (false);
+				return (true);
+			}
+
+			/* check whether a node is a right child of its parent.
+			returns true if it is the case, false if it is the left child or has
+			no parent */
+			bool	_is_right_child(node *target)
+			{
+				if (target->_parent == nullptr || target->_parent->_right != target)
+					return (false);
+				return (true);
+			}
+
+		/* HELPERS SPECIFIC TO AVL TREES */
 
 			/* update or calculate balance factor (int bf) of a given node
 			bf formula equal to |   bf(node) = depth(RS(node)) - depth(LS(node))   |  
@@ -329,15 +358,13 @@ namespace ft
 				}
 			}
 
-			/* AVL HELPER MODIF FUNCTIONS */
-
 			/* perform a left rotation on node a. Basically,
 			in a configuration when b is the right child of a and c a right child of b,
 			we proceed in 3 steps :
 			1] b becomes the new root (or subroot case a was not the root of the tree)
 			2] a takes ownership of b’s child as its right child (or nullptr if b's child is equal to nullptr)
 			3] b takes ownership of a as its left child */
-			void	_AVL_left_rotation(node *a) // to test
+			void	_AVL_left_rotation(node *a)
 			{	
 				node		*b = a->_right;
 
@@ -367,9 +394,10 @@ namespace ft
 			in a configuration when b is the left child of a and c a left child of b,
 			we proceed in 3 steps : 
 			1] b becomes the new root (or subroot case a was not the root of the tree)
-			2] c takes ownership of b’s right child, as its left child (or nullptr if b's right child is equal to nullptr).
+			2] c takes ownership of b’s right child, as its left child 
+			(or nullptr if b's right child is equal to nullptr).
 			3] b takes ownership of c, as its right child */
-			void	_AVL_right_rotation(node *a) // to test 
+			void	_AVL_right_rotation(node *a)
 			{	
 				node		*b = a->_left;
 
@@ -398,7 +426,7 @@ namespace ft
 
 			/* Perform the left rotation on the left subtree.
 			Then, perform the right rotation on the root node. */
-			void	_AVL_right_left_rotation(node *a) // to test
+			void	_AVL_right_left_rotation(node *a)
 			{
 				this->_AVL_right_rotation(a->_right);
 				this->_AVL_left_rotation(a);
@@ -406,14 +434,14 @@ namespace ft
 			
 			/* Perform the right rotation on the right subtree.
 			Then, Perform the left rotation on the root node */
-			void	_AVL_left_right_rotation(node *a) // to test
+			void	_AVL_left_right_rotation(node *a)
 			{
 				this->_AVL_left_rotation(a->_left);
 				this->_AVL_right_rotation(a);
 			}
 
 			/* rebalance the tree using rotations functions */
-			void	_rebalanceTree(node *start) // to test
+			void	_rebalanceTree(node *start)
 			{
 				if (start->_bf > 0) 
 				{
@@ -431,11 +459,11 @@ namespace ft
 				}
 			}
 
-			/* AVL MODIFICATION FUNCTIONS */
+		/* AVL MODIFICATION FUNCTIONS */
 
 			/* performs a standard BST insertion. Then, update balance factor of z and its parents,
 			and performs rotations if necessary */
-			void	_AVLtreeInsert(node *z) // to test
+			void	_AVLtreeInsert(node *z)
 			{
 				this->_treeInsert(z);
 				this->_update_balance_factor(z);
@@ -444,19 +472,21 @@ namespace ft
 			/* search for the parent node corresponding to the node corresponding to key, 
 			then performs standard BST deletion with key, then update balance factor of node parent and its parent,
 			and finally performs rotations if necessary */
-			void	_AVLtreeDelete(node *start, const Key& key) // to test
+			void	_AVLtreeDelete(node *start, const Key& key)
 			{
 				node		*z = start->getTreeSearch(start, key);
 				
 				this->_treeDelete(start, key);
-				this->_update_balance_factor(z);	
+				this->_size--;
+				if (this->_size > 0)
+					this->_update_balance_factor(z);
 			}
 			
-			/* STANDARD BST FUNCTIONS */
+		/* STANDARD BST MODIFCATION FUNCTIONS */
 
 			/* inserts a value in a tree, without caring to the 
 			equilibrium of the tree (standard BST insertion) */
-			void	_treeInsert(node *z) // functionnal
+			void	_treeInsert(node *z)
 			{
 				node		*y = nullptr;
 				node		*x = this->_root;
@@ -480,7 +510,7 @@ namespace ft
 			}
 
 			/* should be used with start == this->_root */
-			node	*_treeDelete(node *start, const Key key) // to test
+			node	*_treeDelete(node *start, const Key key)
 			{
 				if (start == nullptr)
 					return (nullptr);
@@ -545,11 +575,10 @@ namespace ft
 						start->_right = _treeDelete(start->_right, tmp->_val.first);
 					}
 				}
-				this->_size--;
 				return (start);
 			}
 			
-			/* DEBUGGING PRIVATE FUNCTIONS */
+		/* DEBUGGING PRIVATE FUNCTIONS */
 
 			/* this function is a debug one to print every feature of a node to check whether
 			the connections between nodes are preserved after insertion/deletion procedures */
